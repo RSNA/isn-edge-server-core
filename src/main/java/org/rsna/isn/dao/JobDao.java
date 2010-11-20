@@ -1,6 +1,25 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* Copyright (c) <2010>, <Radiological Society of North America>
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+ * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+ * Neither the name of the <RSNA> nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ * PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+ * OF SUCH DAMAGE.
  */
 package org.rsna.isn.dao;
 
@@ -16,10 +35,21 @@ import org.rsna.isn.domain.Job;
 
 /**
  *
- * @author wtellis
+ * @author Wyatt Tellis
+ * @version 1.2.0
+ *
+ * Purpose: Programmatic interface to "v_job_status" view.
  */
 public class JobDao extends Dao
 {
+	/**
+	 * Get all jobs with the specified status.
+	 *
+	 * @param status A job status code
+	 * @return A set containing all the jobs with the specified status. The
+	 * jobs are sorted by "last_transaction_timestamp"
+	 * @throws SQLException If there was an error retrieving from the database
+	 */
 	public Set<Job> getJobsByStatus(int status) throws SQLException
 	{
 		Connection con = getConnection();
@@ -47,6 +77,14 @@ public class JobDao extends Dao
 
 	}
 
+	/**
+	 * Get a job by its id
+	 *
+	 * @param id The id of the job to find.
+	 * @return A job instance or null if the job id is invalid.
+	 * @throws SQLException If there was an error retrieving the job from the
+	 * database.
+	 */
 	public Job getJobById(int id) throws SQLException
 	{
 		Connection con = getConnection();
@@ -69,6 +107,16 @@ public class JobDao extends Dao
 		}
 	}
 
+	/**
+	 * Update the status of a job.  This method will add a new row to the "transactions"
+	 * table.
+	 *
+	 * @param job A job instance.
+	 * @param status A job status code
+	 * @param ex An exception whose stack trace will be included in the "comments"
+	 * column 
+	 * @throws SQLException If there was an error updating the job's status.
+	 */
 	public void updateStatus(Job job, int status, Throwable ex) throws SQLException
 	{
 		String msg = ExceptionUtils.getStackTrace(ex);
@@ -76,11 +124,28 @@ public class JobDao extends Dao
 		updateStatus(job, status, msg);
 	}
 
+	/**
+	 * Update the status of a job.  This method will add a new row to the "transactions"
+	 * table.
+	 * 
+	 * @param job A job instance.
+	 * @param status A job status code.
+	 * @throws SQLException If there was an error updating the job's status.
+	 */
 	public void updateStatus(Job job, int status) throws SQLException
 	{
 		updateStatus(job, status, "");
 	}
 
+	/**
+	 * Update the status of a job.  This method will add a new row to the "transactions"
+	 * table.
+	 * 
+	 * @param job A job instance.
+	 * @param status A job status code.
+	 * @param message The message to include in the "comments" column.
+	 * @throws SQLException If there was an error updating the job's status.
+	 */
 	public void updateStatus(Job job, int status, String message) throws SQLException
 	{
 		Connection con = getConnection();
