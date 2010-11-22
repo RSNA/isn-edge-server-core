@@ -28,12 +28,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * This class is used to track the DICOM study that makes up a submission
+ * set.
  *
  * @author Wyatt Tellis
  * @version 1.2.0
  *
- * Purpose: This class is used to track the DICOM study that makes up a submission
- * set.
  */
 public class DicomStudy
 {

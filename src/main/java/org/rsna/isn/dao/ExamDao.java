@@ -32,11 +32,11 @@ import org.rsna.isn.domain.Exam;
 import org.rsna.isn.domain.RsnaDemographics;
 
 /**
- *
+ * Programmatic interface to the "v_exam_status" view.
+ * 
  * @author Wyatt Tellis
  * @version 1.2.0
- *
- * Purpose: Programmatic interface to "v_exam_status" view.
+ * 
  */
 public class ExamDao extends Dao
 {

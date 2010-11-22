@@ -24,11 +24,10 @@
 package org.rsna.isn.util;
 
 /**
+ * This class contains constants required by multiple apps.
  *
  * @author Wyatt Tellis
  * @version 1.2.0
- *
- * Purpose: This class contains constants used by multiple modules
  */
 public class Constants
 {

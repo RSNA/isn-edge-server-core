@@ -26,10 +26,10 @@ package org.rsna.isn.domain;
 import java.io.File;
 
 /**
+ * This class is used to track the submission set KOS
+ *
  * @author Wyatt Tellis
  * @version 1.2.0
- *
- * Purpose: This class is used to track the submission set KOS
  * 
  */
 public class DicomKos

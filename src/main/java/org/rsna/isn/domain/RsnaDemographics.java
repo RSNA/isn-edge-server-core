@@ -24,11 +24,10 @@
 package org.rsna.isn.domain;
 
 /**
- *
+ * This class represents entries from the "patient_rsna_ids" table
+ * 
  * @author Wyatt Tellis
  * @version 1.2.0
- *
- * Purpose: This class represents entries from the "patient_rsna_ids" table
  *
  */
 public class RsnaDemographics

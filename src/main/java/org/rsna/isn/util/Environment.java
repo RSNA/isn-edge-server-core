@@ -28,14 +28,13 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.PropertyConfigurator;
 
 /**
- *
- * @author Wyatt Tellis
- * @version 1.2.0
- *
- * Purpose: This class contains methods for accessing information about the
+ * This class contains methods for accessing information about the
  * installation environment.
  * Note: init() should be called before using any of the other methods from this
  * class
+ * 
+ * @author Wyatt Tellis
+ * @version 1.2.0
  * 
  *
  */

@@ -26,12 +26,12 @@ package org.rsna.isn.domain;
 import java.io.File;
 
 /**
- * @author Wyatt Tellis
- * @version 1.2.0
- *
- * Purpose: This class is used to track the DICOM objects that make up a submission
+ * This class is used to track the DICOM objects that make up a submission
  * set.
  *
+ * @author Wyatt Tellis
+ * @version 1.2.0
+ * 
  */
 public class DicomObject
 {

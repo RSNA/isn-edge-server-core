@@ -31,11 +31,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *
+ * 
+ * Programmatic interface to the "configurations" table.
+ * 
  * @author Wyatt Tellis
  * @version 1.2.0
- *
- * Purpose: Programmatic interface to "configurations" table.
  */
 public class ConfigurationDao extends Dao
 {

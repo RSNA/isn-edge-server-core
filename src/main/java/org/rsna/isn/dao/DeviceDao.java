@@ -31,11 +31,11 @@ import java.util.Set;
 import org.rsna.isn.domain.Device;
 
 /**
+ * Programmatic interface to the "devices" table.
  *
  * @author Wyatt Tellis
  * @version 1.2.0
- *
- * Purpose: Programmatic interface to "devices" table.
+ * 
  */
 public class DeviceDao extends Dao
 {

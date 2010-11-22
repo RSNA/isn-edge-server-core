@@ -24,12 +24,11 @@
 package org.rsna.isn.domain;
 
 /**
+ * This class represents a remote PACS as specified in the "devices"
+ * table.
  *
  * @author Wyatt Tellis
  * @version 1.2.0
- *
- * Purpose: This class represents a remote PACS as specified in the "devices"
- * table.
  * 
  */
 public class Device

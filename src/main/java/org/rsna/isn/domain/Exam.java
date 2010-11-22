@@ -26,11 +26,10 @@ package org.rsna.isn.domain;
 import java.util.Date;
 
 /**
+ * This class represents an exam
  *
  * @author Wyatt Tellis
  * @version 1.2.0
- *
- * Purpose: This class represents an exam
  *
  */
 public class Exam

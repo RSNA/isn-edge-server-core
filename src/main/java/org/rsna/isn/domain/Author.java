@@ -26,12 +26,11 @@ package org.rsna.isn.domain;
 import org.apache.commons.lang.StringUtils;
 
 /**
+ * This class represents a report author.  It handles parsing data from
+ * the "signer", "dictator" and "transcriber" columns in the "reports" table.
  *
  * @author Wyatt Tellis
  * @version 1.2.0
- *
- * Purpose: This class represents a report author.  It handles parsing data from
- * the "signer", "dictator" and "transcriber" columns in the "reports" table. 
  */
 public class Author
 {

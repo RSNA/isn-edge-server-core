@@ -34,11 +34,10 @@ import org.apache.log4j.Logger;
 import org.rsna.isn.util.Environment;
 
 /**
- *
+ * Base class for all Dao classes.
+ * 
  * @author Wyatt Tellis
  * @version 1.2.0
- *
- * Purpose: Base class for all Dao classes.
  *
  */
 public abstract class Dao
