@@ -25,7 +25,7 @@ package org.rsna.isn.util;
 
 import java.io.File;
 import org.apache.commons.lang.StringUtils;
-import org.rsna.isn.dao.ConfigurationDao;
+import org.apache.log4j.PropertyConfigurator;
 
 /**
  *
@@ -33,47 +33,124 @@ import org.rsna.isn.dao.ConfigurationDao;
  * @version 1.2.0
  *
  * Purpose: This class contains methods for accessing information about the
- * installation environment
+ * installation environment.
+ * Note: init() should be called before using any of the other methods from this
+ * class
+ * 
+ *
  */
 public class Environment
 {
-	private static final File dcmDir;
-
-	private static final File tmpDir;
-
-	static
-	{
-		try
-		{
-			ConfigurationDao dao = new ConfigurationDao();
-			String path = dao.getConfiguration("dcm-dir-path");
-			if (StringUtils.isBlank(path))
-				throw new ExceptionInInitializerError("dcm-dir-path is not defined");
-
-			dcmDir = new File(path);
-			dcmDir.mkdir();
-			if (!dcmDir.isDirectory())
-				throw new ExceptionInInitializerError(dcmDir + " is not a directory");
-
-
-			
-			path = dao.getConfiguration("tmp-dir-path");
-			if (StringUtils.isBlank(path))
-				throw new ExceptionInInitializerError("tmp-dir-path is not defined");
-			tmpDir = new File(path);
-			tmpDir.mkdir();
-			if (!tmpDir.isDirectory())
-				throw new ExceptionInInitializerError(tmpDir + " is not a directory");
-		}
-		catch (Exception ex)
-		{
-			throw new ExceptionInInitializerError(ex);
-		}
-
-	}
+	private static String rootPath;
 
 	private Environment()
 	{
+	}
+
+	/**
+	 * Initializes the rnsa directory information and the log4j logging library.
+	 * It looks for the environment variable RSNA_ROOT or system property called
+	 * rsna.root and then computes other paths from that. If it fails find either
+	 * it will default to ${user.home}/rsna.
+	 *
+	 * @param appName A string containing the short name of the app.  This string
+	 * is used to locate the appropriate log4j configuration using the path:
+	 * ${rsna.root}/conf/${appName}-log4j.properties
+	 * @throws IllegalArgumentException If RSNA_ROOT or rsna.root is invalid or
+	 * if any of the subdirectories do not exist or cannot be created.
+	 */
+	public synchronized static void init(String appName)
+	{
+		if (rootPath != null)
+			return;
+
+		//
+		// Read from "rsna.root" system property
+		//
+		String sys = System.getProperty("rsna.root");
+		if (StringUtils.isNotBlank(sys))
+		{
+			File rootDir = new File(sys);
+
+			if (!rootDir.isDirectory())
+				throw new IllegalArgumentException(sys + " is not a directory.");
+
+			rootPath = sys;
+		}
+
+		//
+		// Read from RSNA_ROOT environment variable
+		//
+		String env = System.getenv("RSNA_ROOT");
+		if (rootPath == null && StringUtils.isNotBlank(env))
+		{
+			File rootDir = new File(env);
+
+			if (!rootDir.isDirectory())
+				throw new IllegalArgumentException(env + " is not a directory.");
+
+			rootPath = env;
+		}
+
+
+		//
+		// Default to ${user.home}/rsna
+		//
+		if (rootPath == null)
+		{
+			String user = System.getProperty("user.home");
+
+			File rootDir = new File(user, "rsna");
+			rootDir.mkdir();
+
+			if (!rootDir.isDirectory())
+				throw new IllegalArgumentException("Unable to create "
+						+ rootDir + " directory.");
+
+			rootPath = rootDir.getPath();
+		}
+
+
+		File dcmDir = getDcmDir();
+		dcmDir.mkdir();
+		if (!dcmDir.isDirectory())
+		{
+			if (!dcmDir.isDirectory())
+				throw new IllegalArgumentException(dcmDir + " is not a directory.");
+		}
+
+
+
+		File tmpDir = getTmpDir();
+		tmpDir.mkdir();
+		if (!tmpDir.isDirectory())
+		{
+			if (!tmpDir.isDirectory())
+				throw new IllegalArgumentException(tmpDir + " is not a directory.");
+		}
+
+
+
+		File confDir = getConfDir();
+		if (!confDir.isDirectory())
+		{
+			if (!confDir.isDirectory())
+				throw new IllegalArgumentException(confDir + " is not a directory.");
+		}
+
+
+		File log4j = new File(confDir, appName + "-log4j.properties");
+		PropertyConfigurator.configure(log4j.getPath());
+	}
+
+	/**
+	 * Get the rsna root directory.
+	 *
+	 * @return A file instance
+	 */
+	public static File getRootDir()
+	{
+		return new File(rootPath);
 	}
 
 	/**
@@ -83,7 +160,7 @@ public class Environment
 	 */
 	public static File getDcmDir()
 	{
-		return dcmDir;
+		return new File(rootPath, "dcm");
 	}
 
 	/**
@@ -92,7 +169,16 @@ public class Environment
 	 */
 	public static File getTmpDir()
 	{
-		return tmpDir;
+		return new File(rootPath, "tmp");
+	}
+
+	/**
+	 * Get the rsna/conf directory.
+	 * @return A file instance
+	 */
+	public static File getConfDir()
+	{
+		return new File(rootPath, "conf");
 	}
 
 }

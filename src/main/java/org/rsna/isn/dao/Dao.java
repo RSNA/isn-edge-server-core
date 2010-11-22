@@ -31,6 +31,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.rsna.isn.util.Environment;
 
 /**
  *
@@ -54,14 +55,12 @@ public abstract class Dao
 
 	static
 	{
-		String path = System.getProperty("database.properties");
-		if (StringUtils.isBlank(path))
-			throw new ExceptionInInitializerError("database.properties system property is not defined");
+		File confDir = Environment.getConfDir();
+		File dbPropsFile = new File(confDir, "database.properties");
 
-		File file = new File(path);
 		try
 		{
-			FileInputStream input = new FileInputStream(file);
+			FileInputStream input = new FileInputStream(dbPropsFile);
 
 			Properties props = new Properties();
 			props.load(input);
@@ -78,7 +77,7 @@ public abstract class Dao
 			if (StringUtils.isBlank(pw))
 				throw new ExceptionInInitializerError("rsnadb.pw is not defined");
 
-			logger.info("Loaded database properties from " + file.getPath());
+			logger.info("Loaded database properties from " + dbPropsFile.getPath());
 
 			ds = new ComboPooledDataSource();
 			ds.setDriverClass("org.postgresql.Driver"); //loads the jdbc driver
