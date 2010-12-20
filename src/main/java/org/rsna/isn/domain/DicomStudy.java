@@ -37,280 +37,281 @@ import java.util.Map;
  */
 public class DicomStudy
 {
-	private String patientName;
 
-	/**
-	 * Get the value of patientName
-	 *
-	 * @return the value of patientName
-	 */
-	public String getPatientName()
-	{
-		return patientName;
-	}
+    private String patientName;
 
-	/**
-	 * Set the value of patientName
-	 *
-	 * @param patientName new value of patientName
-	 */
-	public void setPatientName(String patientName)
-	{
-		this.patientName = patientName;
-	}
+    /**
+     * Get the value of patientName
+     *
+     * @return the value of patientName
+     */
+    public String getPatientName()
+    {
+        return patientName;
+    }
 
-	private String patientId;
+    /**
+     * Set the value of patientName
+     *
+     * @param patientName new value of patientName
+     */
+    public void setPatientName(String patientName)
+    {
+        this.patientName = patientName;
+    }
 
-	/**
-	 * Get the value of patientId
-	 *
-	 * @return the value of patientId
-	 */
-	public String getPatientId()
-	{
-		return patientId;
-	}
+    private String patientId;
 
-	/**
-	 * Set the value of patientId
-	 *
-	 * @param patientId new value of patientId
-	 */
-	public void setPatientId(String patientId)
-	{
-		this.patientId = patientId;
-	}
+    /**
+     * Get the value of patientId
+     *
+     * @return the value of patientId
+     */
+    public String getPatientId()
+    {
+        return patientId;
+    }
 
-	private String sex;
+    /**
+     * Set the value of patientId
+     *
+     * @param patientId new value of patientId
+     */
+    public void setPatientId(String patientId)
+    {
+        this.patientId = patientId;
+    }
 
-	/**
-	 * Get the value of sex
-	 *
-	 * @return the value of sex
-	 */
-	public String getSex()
-	{
-		return sex;
-	}
+    private String sex;
 
-	/**
-	 * Set the value of sex
-	 *
-	 * @param sex new value of sex
-	 */
-	public void setSex(String sex)
-	{
-		this.sex = sex;
-	}
+    /**
+     * Get the value of sex
+     *
+     * @return the value of sex
+     */
+    public String getSex()
+    {
+        return sex;
+    }
 
-	private Date birthdate;
+    /**
+     * Set the value of sex
+     *
+     * @param sex new value of sex
+     */
+    public void setSex(String sex)
+    {
+        this.sex = sex;
+    }
 
-	/**
-	 * Get the value of birthdate
-	 *
-	 * @return the value of birthdate
-	 */
-	public Date getBirthdate()
-	{
-		return birthdate;
-	}
+    private Date birthdate;
 
-	/**
-	 * Set the value of birthdate
-	 *
-	 * @param birthdate new value of birthdate
-	 */
-	public void setBirthdate(Date birthdate)
-	{
-		this.birthdate = birthdate;
-	}
+    /**
+     * Get the value of birthdate
+     *
+     * @return the value of birthdate
+     */
+    public Date getBirthdate()
+    {
+        return birthdate;
+    }
 
-	private String accessionNumber;
+    /**
+     * Set the value of birthdate
+     *
+     * @param birthdate new value of birthdate
+     */
+    public void setBirthdate(Date birthdate)
+    {
+        this.birthdate = birthdate;
+    }
 
-	/**
-	 * Get the value of accessionNumber
-	 *
-	 * @return the value of accessionNumber
-	 */
-	public String getAccessionNumber()
-	{
-		return accessionNumber;
-	}
+    private String accessionNumber;
 
-	/**
-	 * Set the value of accessionNumber
-	 *
-	 * @param accessionNumber new value of accessionNumber
-	 */
-	public void setAccessionNumber(String accessionNumber)
-	{
-		this.accessionNumber = accessionNumber;
-	}
+    /**
+     * Get the value of accessionNumber
+     *
+     * @return the value of accessionNumber
+     */
+    public String getAccessionNumber()
+    {
+        return accessionNumber;
+    }
 
-	private Date studyDateTime;
+    /**
+     * Set the value of accessionNumber
+     *
+     * @param accessionNumber new value of accessionNumber
+     */
+    public void setAccessionNumber(String accessionNumber)
+    {
+        this.accessionNumber = accessionNumber;
+    }
 
-	/**
-	 * Get the value of studyDateTime
-	 *
-	 * @return the value of studyDateTime
-	 */
-	public Date getStudyDateTime()
-	{
-		return studyDateTime;
-	}
+    private Date studyDateTime;
 
-	/**
-	 * Set the value of studyDateTime
-	 *
-	 * @param studyDateTime new value of studyDateTime
-	 */
-	public void setStudyDateTime(Date studyDateTime)
-	{
-		this.studyDateTime = studyDateTime;
-	}
+    /**
+     * Get the value of studyDateTime
+     *
+     * @return the value of studyDateTime
+     */
+    public Date getStudyDateTime()
+    {
+        return studyDateTime;
+    }
 
-	private String studyDescription;
+    /**
+     * Set the value of studyDateTime
+     *
+     * @param studyDateTime new value of studyDateTime
+     */
+    public void setStudyDateTime(Date studyDateTime)
+    {
+        this.studyDateTime = studyDateTime;
+    }
 
-	/**
-	 * Get the value of studyDescription
-	 *
-	 * @return the value of studyDescription
-	 */
-	public String getStudyDescription()
-	{
-		return studyDescription;
-	}
+    private String studyDescription;
 
-	/**
-	 * Set the value of studyDescription
-	 *
-	 * @param studyDescription new value of studyDescription
-	 */
-	public void setStudyDescription(String studyDescription)
-	{
-		this.studyDescription = studyDescription;
-	}
+    /**
+     * Get the value of studyDescription
+     *
+     * @return the value of studyDescription
+     */
+    public String getStudyDescription()
+    {
+        return studyDescription;
+    }
 
-	private String studyUid;
+    /**
+     * Set the value of studyDescription
+     *
+     * @param studyDescription new value of studyDescription
+     */
+    public void setStudyDescription(String studyDescription)
+    {
+        this.studyDescription = studyDescription;
+    }
 
-	/**
-	 * Get the value of studyUid
-	 *
-	 * @return the value of studyUid
-	 */
-	public String getStudyUid()
-	{
-		return studyUid;
-	}
+    private String studyUid;
 
-	/**
-	 * Set the value of studyUid
-	 *
-	 * @param studyUid new value of studyUid
-	 */
-	public void setStudyUid(String studyUid)
-	{
-		this.studyUid = studyUid;
-	}
+    /**
+     * Get the value of studyUid
+     *
+     * @return the value of studyUid
+     */
+    public String getStudyUid()
+    {
+        return studyUid;
+    }
 
-	private String studyId;
+    /**
+     * Set the value of studyUid
+     *
+     * @param studyUid new value of studyUid
+     */
+    public void setStudyUid(String studyUid)
+    {
+        this.studyUid = studyUid;
+    }
 
-	/**
-	 * Get the value of studyId
-	 *
-	 * @return the value of studyId
-	 */
-	public String getStudyId()
-	{
-		return studyId;
-	}
+    private String studyId;
 
-	/**
-	 * Set the value of studyId
-	 *
-	 * @param studyId new value of studyId
-	 */
-	public void setStudyId(String studyId)
-	{
-		this.studyId = studyId;
-	}
+    /**
+     * Get the value of studyId
+     *
+     * @return the value of studyId
+     */
+    public String getStudyId()
+    {
+        return studyId;
+    }
 
-	private String referringPhysician;
+    /**
+     * Set the value of studyId
+     *
+     * @param studyId new value of studyId
+     */
+    public void setStudyId(String studyId)
+    {
+        this.studyId = studyId;
+    }
 
-	/**
-	 * Get the value of referringPhysician
-	 *
-	 * @return the value of referringPhysician
-	 */
-	public String getReferringPhysician()
-	{
-		return referringPhysician;
-	}
+    private String referringPhysician;
 
-	/**
-	 * Set the value of referringPhysician
-	 *
-	 * @param referringPhysician new value of referringPhysician
-	 */
-	public void setReferringPhysician(String referringPhysician)
-	{
-		this.referringPhysician = referringPhysician;
-	}
+    /**
+     * Get the value of referringPhysician
+     *
+     * @return the value of referringPhysician
+     */
+    public String getReferringPhysician()
+    {
+        return referringPhysician;
+    }
 
-	private Exam exam;
+    /**
+     * Set the value of referringPhysician
+     *
+     * @param referringPhysician new value of referringPhysician
+     */
+    public void setReferringPhysician(String referringPhysician)
+    {
+        this.referringPhysician = referringPhysician;
+    }
 
-	/**
-	 * Get the value of exam
-	 *
-	 * @return the value of exam
-	 */
-	public Exam getExam()
-	{
-		return exam;
-	}
+    private Job job;
 
-	/**
-	 * Set the value of exam
-	 *
-	 * @param exam new value of exam
-	 */
-	public void setExam(Exam exam)
-	{
-		this.exam = exam;
-	}
+    /**
+     * Get the value of job
+     *
+     * @return the value of job
+     */
+    public Job getJob()
+    {
+        return job;
+    }
 
-	private DicomKos kos;
+    /**
+     * Set the value of job
+     *
+     * @param job new value of job
+     */
+    public void setJob(Job job)
+    {
+        this.job = job;
+    }
 
-	/**
-	 * Get the KOS for this study
-	 *
-	 * @return A DicomKos instance or null if the kos property hasn't been set
-	 */
-	public DicomKos getKos()
-	{
-		return kos;
-	}
+    private DicomKos kos;
 
-	/**
-	 * Set the value of kos
-	 *
-	 * @param kos new value of kos
-	 */
-	public void setKos(DicomKos kos)
-	{
-		this.kos = kos;
-	}
+    /**
+     * Get the KOS for this study
+     *
+     * @return A DicomKos instance or null if the kos property hasn't been set
+     */
+    public DicomKos getKos()
+    {
+        return kos;
+    }
 
-	private Map<String, DicomSeries> series = new LinkedHashMap();
+    /**
+     * Set the value of kos
+     *
+     * @param kos new value of kos
+     */
+    public void setKos(DicomKos kos)
+    {
+        this.kos = kos;
+    }
 
-	/**
-	 * Get the DICOM series associated with this study.
-	 * 
-	 * @return A set containing the associated series
-	 */
-	public Map<String, DicomSeries> getSeries()
-	{
-		return series;
-	}
+    private Map<String, DicomSeries> series = new LinkedHashMap();
+
+    /**
+     * Get the DICOM series associated with this study.
+     *
+     * @return A set containing the associated series
+     */
+    public Map<String, DicomSeries> getSeries()
+    {
+        return series;
+    }
 
 }

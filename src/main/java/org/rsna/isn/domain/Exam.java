@@ -122,28 +122,6 @@ public class Exam
 		this.statusTimestamp = statusTimestamp;
 	}
 
-	private RsnaDemographics rsnaDemographics;
-
-	/**
-	 * Get the value of rsnaDemographics
-	 *
-	 * @return the value of rsnaDemographics
-	 */
-	public RsnaDemographics getRsnaDemographics()
-	{
-		return rsnaDemographics;
-	}
-
-	/**
-	 * Set the value of rsnaDemographics
-	 *
-	 * @param rsnaDemographics new value of rsnaDemographics
-	 */
-	public void setRsnaDemographics(RsnaDemographics rsnaDemographics)
-	{
-		this.rsnaDemographics = rsnaDemographics;
-	}
-
 	private Author signer;
 
 	/**

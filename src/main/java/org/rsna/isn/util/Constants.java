@@ -36,7 +36,7 @@ public class Constants
 	 * The assigning authority universal id assigned to the RSNA image sharing
 	 * network.
 	 */
-	public static final String RSNA_UNIVERSAL_ID = "2.25.254116628432602510754375974119947061420";
+	public static final String RSNA_UNIVERSAL_ID = "1.3.6.1.4.1.19376.2.840.1.1.1.1";
 /**
 	 * The assigning authority universal id type assigned to the RSNA image sharing
 	 * network.

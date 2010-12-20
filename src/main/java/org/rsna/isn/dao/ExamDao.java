@@ -29,7 +29,6 @@ import java.sql.SQLException;
 import org.apache.commons.lang.StringUtils;
 import org.rsna.isn.domain.Author;
 import org.rsna.isn.domain.Exam;
-import org.rsna.isn.domain.RsnaDemographics;
 
 /**
  * Programmatic interface to the "v_exam_status" view.
@@ -70,21 +69,6 @@ public class ExamDao extends Dao
 				if (StringUtils.isNotBlank(signer))
 					exam.setSigner(new Author(signer));
 
-
-
-
-				int patId = rs.getInt("patient_id");
-				String rsnaSelect = "SELECT * FROM patient_rsna_ids WHERE patient_id = " + patId;
-				ResultSet rs2 = con.createStatement().executeQuery(rsnaSelect);
-				if (rs2.next())
-				{
-					RsnaDemographics rsna = new RsnaDemographics();
-					rsna.setId(rs2.getString("rsna_id"));
-					rsna.setLastName(rs2.getString("patient_alias_lastname"));
-					rsna.setFirstName(rs2.getString("patient_alias_firstname"));
-
-					exam.setRsnaDemographics(rsna);
-				}
 
 				return exam;
 			}
