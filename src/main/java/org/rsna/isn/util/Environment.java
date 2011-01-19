@@ -144,9 +144,13 @@ public class Environment
 
 
 
-        File edgeKs = new File(confDir, "edge.jks");
-        setProperty("javax.net.ssl.keyStore", edgeKs.getPath());
+        File keystore = new File(confDir, "keystore.jks");
+        setProperty("javax.net.ssl.keyStore", keystore.getPath());
         setProperty("javax.net.ssl.keyStorePassword", "edge1234");
+
+        File truststore = new File(confDir, "truststore.jks");
+        setProperty("javax.net.ssl.trustStore", truststore.getPath());
+        setProperty("javax.net.ssl.trustStorePassword", "edge1234");
     }
 
     /**
