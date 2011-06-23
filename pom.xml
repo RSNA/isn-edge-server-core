@@ -5,7 +5,7 @@
 	<groupId>org.rsna.isn</groupId>
 	<artifactId>core</artifactId>
 	<packaging>jar</packaging>
-	<version>1.2.1</version>
+	<version>1.2.2</version>
 	<name>RSNA ISN - Core Library</name>
 	<url>http://maven.apache.org</url>
 	<build>
