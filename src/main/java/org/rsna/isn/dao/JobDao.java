@@ -27,7 +27,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.rsna.isn.domain.Exam;
@@ -107,6 +109,41 @@ public class JobDao extends Dao
 		}
 	}
 
+	public List<Job> findJobs(String mrn, String accNum, int status) throws SQLException
+	{
+		Connection con = getConnection();
+		try
+		{
+			String sql = "SELECT v_job_status.* FROM v_job_status INNER JOIN v_exam_status "
+					+ "ON v_job_status.exam_id = v_exam_status.exam_id "
+					+ "WHERE v_job_status.status = ? "
+					+ "AND mrn = ? "
+					+ "AND accession_number = ?";
+
+
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setInt(1, status);
+			stmt.setString(2, mrn);
+			stmt.setString(3, accNum);
+
+			List<Job> jobs = new ArrayList();
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next())
+			{
+				Job job = buildEntity(rs);
+				
+				jobs.add(job);
+			}
+			rs.close();
+
+			return jobs;
+		}
+		finally
+		{
+			con.close();
+		}
+	}
+
 	/**
 	 * Update the status of a job.  This method will add a new row to the "transactions"
 	 * table.
@@ -176,7 +213,7 @@ public class JobDao extends Dao
 		job.setStatus(rs.getInt("status"));
 		job.setStatusMessage(rs.getString("status_message"));
 		job.setDelay(rs.getInt("delay_in_hrs"));
-                job.setSingleUsePatientId(rs.getString("single_use_patient_id"));
+		job.setSingleUsePatientId(rs.getString("single_use_patient_id"));
 
 		int examId = rs.getInt("exam_id");
 
