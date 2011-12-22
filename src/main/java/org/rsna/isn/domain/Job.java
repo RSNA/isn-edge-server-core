@@ -202,7 +202,7 @@ public class Job
     @Override
     public String toString()
     {
-        return "Job{" + "id=" + jobId + '}';
+        return "job #" + jobId;
     }
 
 }

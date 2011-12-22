@@ -166,4 +166,17 @@ public class Exam
 		this.report = report;
 	}
 
+	@Override
+	public String toString()
+	{
+		StringBuilder str = new StringBuilder();
+		str.append("exam ");
+		str.append(mrn);
+		str.append("/");
+		str.append(accNum);
+		
+		return str.toString();
+	}
+
+	
 }

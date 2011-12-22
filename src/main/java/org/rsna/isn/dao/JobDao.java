@@ -109,6 +109,16 @@ public class JobDao extends Dao
 		}
 	}
 
+	/**
+	 * Find jobs by MRN, accession number and status.
+	 *
+	 * @param mrn The MRN to search by
+	 * @param accNum The accession number to search by
+	 * @param status The status to search by
+	 * @return A list of matching jobs in no specific order
+	 * @throws SQLException If there was an error retrieving the list of jobs from the
+	 * database.
+	 */
 	public List<Job> findJobs(String mrn, String accNum, int status) throws SQLException
 	{
 		Connection con = getConnection();
@@ -131,7 +141,7 @@ public class JobDao extends Dao
 			while (rs.next())
 			{
 				Job job = buildEntity(rs);
-				
+
 				jobs.add(job);
 			}
 			rs.close();
@@ -198,6 +208,76 @@ public class JobDao extends Dao
 			stmt.setString(3, message);
 
 			stmt.execute();
+		}
+		finally
+		{
+			con.close();
+		}
+	}
+
+	/**
+	 * Update the comments associated with the specified job. This method uses the
+	 * value of expectedStatus to locate the appropriate row in the transactions
+	 * table to update. 
+	 * 
+	 * @param job The job whose comments will be updated.  Must not be null.
+	 * @param expectedStatus The expected status of the job.  If the job is not 
+	 * in this status, this method will throw an IllegalStateException exception.
+	 * @param comments The new comments.  Must not be null.
+	 * @throws SQLException If there was a database error. 
+	 */
+	public void updateComments(Job job, int expectedStatus, String comments) throws SQLException
+	{
+		Connection con = getConnection();
+
+		try
+		{
+			int jobId = job.getJobId();
+			
+			String selectSql = "SELECT transaction_id, status_code FROM transactions "
+					+ "WHERE job_id = ? ORDER BY modified_date DESC LIMIT 1";
+
+			PreparedStatement selectStmt = con.prepareStatement(selectSql);
+			selectStmt.setInt(1, jobId);
+			
+			ResultSet rs = selectStmt.executeQuery();
+			if(!rs.next())
+			{
+				//
+				// If there's nothing in the transactions table for this job then we
+				// have a serious problem.
+				//
+				
+				throw new IllegalStateException("No entries in the transactions "
+						+ "table for job #" + jobId);
+			}
+			
+			
+			int actualStatus = rs.getInt("status_code");			
+			if(actualStatus != expectedStatus)
+			{
+				throw new IllegalStateException("Invalid status for job #" + jobId + ".  "
+						+ "Expected: " + expectedStatus + ", got: " + actualStatus);
+			}
+			
+			
+			
+			
+			
+			int transactionId = rs.getInt("transaction_id");
+			
+			String updateSql = "UPDATE transactions SET comments = ? WHERE transaction_id = ?";
+			
+			
+			PreparedStatement updateStmt = con.prepareStatement(updateSql);
+			updateStmt.setString(1, comments);
+			updateStmt.setInt(2, transactionId);
+			
+			if(updateStmt.executeUpdate() != 1)
+			{
+				throw new IllegalStateException("Unable to update comments on "
+						+ "row with transaction id: " + transactionId);
+			}
 		}
 		finally
 		{
