@@ -30,7 +30,7 @@ import org.apache.commons.lang.StringUtils;
  * the "signer", "dictator" and "transcriber" columns in the "reports" table.
  *
  * @author Wyatt Tellis
- * @version 1.2.0
+ * @version 2.1.0
  */
 public class Author
 {

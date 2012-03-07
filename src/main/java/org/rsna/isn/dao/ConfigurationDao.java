@@ -35,7 +35,7 @@ import java.sql.SQLException;
  * Programmatic interface to the "configurations" table.
  * 
  * @author Wyatt Tellis
- * @version 1.2.0
+ * @version 2.1.0
  */
 public class ConfigurationDao extends Dao
 {

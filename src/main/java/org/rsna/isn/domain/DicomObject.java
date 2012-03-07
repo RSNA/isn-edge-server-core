@@ -30,7 +30,7 @@ import java.io.File;
  * set.
  *
  * @author Wyatt Tellis
- * @version 1.2.0
+ * @version 2.1.0
  * 
  */
 public class DicomObject

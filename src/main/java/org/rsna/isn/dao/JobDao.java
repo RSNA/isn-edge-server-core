@@ -39,7 +39,7 @@ import org.rsna.isn.domain.Job;
  * Programmatic interface to the "v_job_status" view.
  *
  * @author Wyatt Tellis
- * @version 1.2.0
+ * @version 2.1.0
  * 
  */
 public class JobDao extends Dao

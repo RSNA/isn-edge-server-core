@@ -29,7 +29,7 @@ import java.io.File;
  * This class is used to track the submission set KOS
  *
  * @author Wyatt Tellis
- * @version 1.2.0
+ * @version 2.1.0
  * 
  */
 public class DicomKos

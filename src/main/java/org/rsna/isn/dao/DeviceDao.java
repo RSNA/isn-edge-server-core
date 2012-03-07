@@ -34,7 +34,7 @@ import org.rsna.isn.domain.Device;
  * Programmatic interface to the "devices" table.
  *
  * @author Wyatt Tellis
- * @version 1.2.0
+ * @version 2.1.0
  * 
  */
 public class DeviceDao extends Dao

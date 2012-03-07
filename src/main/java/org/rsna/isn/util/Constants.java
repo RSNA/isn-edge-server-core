@@ -27,7 +27,7 @@ package org.rsna.isn.util;
  * This class contains constants required by multiple apps.
  *
  * @author Wyatt Tellis
- * @version 1.2.0
+ * @version 2.1.0
  */
 public class Constants
 {

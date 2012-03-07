@@ -34,7 +34,7 @@ import org.rsna.isn.domain.Exam;
  * Programmatic interface to the "v_exam_status" view.
  * 
  * @author Wyatt Tellis
- * @version 1.2.0
+ * @version 2.1.0
  * 
  */
 public class ExamDao extends Dao
