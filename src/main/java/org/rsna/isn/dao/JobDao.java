@@ -31,7 +31,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.log4j.Logger;
 import org.rsna.isn.domain.Exam;
 import org.rsna.isn.domain.Job;
 
@@ -39,17 +41,20 @@ import org.rsna.isn.domain.Job;
  * Programmatic interface to the "v_job_status" view.
  *
  * @author Wyatt Tellis
- * @version 2.1.0
- * 
+ * @version 3.1.0
+ * @since 1.0.0
+ *
  */
 public class JobDao extends Dao
 {
+	private static final Logger logger = Logger.getLogger(JobDao.class);
+
 	/**
 	 * Get all jobs with the specified status.
 	 *
 	 * @param status A job status code
-	 * @return A set containing all the jobs with the specified status. The
-	 * jobs are sorted by "last_transaction_timestamp"
+	 * @return A set containing all the jobs with the specified status. The jobs
+	 * are sorted by "last_transaction_timestamp"
 	 * @throws SQLException If there was an error retrieving from the database
 	 */
 	public Set<Job> getJobsByStatus(int status) throws SQLException
@@ -66,7 +71,6 @@ public class JobDao extends Dao
 			while (rs.next())
 			{
 				Job job = buildEntity(rs);
-
 				jobs.add(job);
 			}
 
@@ -116,32 +120,30 @@ public class JobDao extends Dao
 	 * @param accNum The accession number to search by
 	 * @param status The status to search by
 	 * @return A list of matching jobs in no specific order
-	 * @throws SQLException If there was an error retrieving the list of jobs from the
-	 * database.
+	 * @throws SQLException If there was an error retrieving the list of jobs
+	 * from the database.
 	 */
-	public List<Job> findJobs(String mrn, String accNum, int status) throws SQLException
+	public List<Job> findJobs(String mrn, String accNum, Integer... statuses) throws SQLException
 	{
 		Connection con = getConnection();
 		try
 		{
 			String sql = "SELECT v_job_status.* FROM v_job_status INNER JOIN v_exam_status "
 					+ "ON v_job_status.exam_id = v_exam_status.exam_id "
-					+ "WHERE v_job_status.status = ? "
+					+ "WHERE v_job_status.status IN (" + StringUtils.join(statuses, ',') + ") "
 					+ "AND mrn = ? "
 					+ "AND accession_number = ?";
 
 
 			PreparedStatement stmt = con.prepareStatement(sql);
-			stmt.setInt(1, status);
-			stmt.setString(2, mrn);
-			stmt.setString(3, accNum);
+			stmt.setString(1, mrn);
+			stmt.setString(2, accNum);
 
 			List<Job> jobs = new ArrayList();
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next())
 			{
 				Job job = buildEntity(rs);
-
 				jobs.add(job);
 			}
 			rs.close();
@@ -155,13 +157,13 @@ public class JobDao extends Dao
 	}
 
 	/**
-	 * Update the status of a job.  This method will add a new row to the "transactions"
-	 * table.
+	 * Update the status of a job. This method will add a new row to the
+	 * "transactions" table.
 	 *
 	 * @param job A job instance.
 	 * @param status A job status code
-	 * @param ex An exception whose stack trace will be included in the "comments"
-	 * column 
+	 * @param ex An exception whose stack trace will be included in the
+	 * "comments" column
 	 * @throws SQLException If there was an error updating the job's status.
 	 */
 	public void updateStatus(Job job, int status, Throwable ex) throws SQLException
@@ -172,9 +174,9 @@ public class JobDao extends Dao
 	}
 
 	/**
-	 * Update the status of a job.  This method will add a new row to the "transactions"
-	 * table.
-	 * 
+	 * Update the status of a job. This method will add a new row to the
+	 * "transactions" table.
+	 *
 	 * @param job A job instance.
 	 * @param status A job status code.
 	 * @throws SQLException If there was an error updating the job's status.
@@ -185,9 +187,9 @@ public class JobDao extends Dao
 	}
 
 	/**
-	 * Update the status of a job.  This method will add a new row to the "transactions"
-	 * table.
-	 * 
+	 * Update the status of a job. This method will add a new row to the
+	 * "transactions" table.
+	 *
 	 * @param job A job instance.
 	 * @param status A job status code.
 	 * @param message The message to include in the "comments" column.
@@ -216,15 +218,16 @@ public class JobDao extends Dao
 	}
 
 	/**
-	 * Update the comments associated with the specified job. This method uses the
-	 * value of expectedStatus to locate the appropriate row in the transactions
-	 * table to update. 
-	 * 
-	 * @param job The job whose comments will be updated.  Must not be null.
-	 * @param expectedStatus The expected status of the job.  If the job is not 
-	 * in this status, this method will throw an IllegalStateException exception.
-	 * @param comments The new comments.  Must not be null.
-	 * @throws SQLException If there was a database error. 
+	 * Update the comments associated with the specified job. This method uses
+	 * the value of expectedStatus to locate the appropriate row in the
+	 * transactions table to update.
+	 *
+	 * @param job The job whose comments will be updated. Must not be null.
+	 * @param expectedStatus The expected status of the job. If the job is not
+	 * in this status, this method will throw an IllegalStateException
+	 * exception.
+	 * @param comments The new comments. Must not be null.
+	 * @throws SQLException If there was a database error.
 	 */
 	public void updateComments(Job job, int expectedStatus, String comments) throws SQLException
 	{
@@ -233,47 +236,47 @@ public class JobDao extends Dao
 		try
 		{
 			int jobId = job.getJobId();
-			
+
 			String selectSql = "SELECT transaction_id, status_code FROM transactions "
 					+ "WHERE job_id = ? ORDER BY modified_date DESC LIMIT 1";
 
 			PreparedStatement selectStmt = con.prepareStatement(selectSql);
 			selectStmt.setInt(1, jobId);
-			
+
 			ResultSet rs = selectStmt.executeQuery();
-			if(!rs.next())
+			if (!rs.next())
 			{
 				//
 				// If there's nothing in the transactions table for this job then we
 				// have a serious problem.
 				//
-				
+
 				throw new IllegalStateException("No entries in the transactions "
 						+ "table for job #" + jobId);
 			}
-			
-			
-			int actualStatus = rs.getInt("status_code");			
-			if(actualStatus != expectedStatus)
+
+
+			int actualStatus = rs.getInt("status_code");
+			if (actualStatus != expectedStatus)
 			{
 				throw new IllegalStateException("Invalid status for job #" + jobId + ".  "
 						+ "Expected: " + expectedStatus + ", got: " + actualStatus);
 			}
-			
-			
-			
-			
-			
+
+
+
+
+
 			int transactionId = rs.getInt("transaction_id");
-			
+
 			String updateSql = "UPDATE transactions SET comments = ? WHERE transaction_id = ?";
-			
-			
+
+
 			PreparedStatement updateStmt = con.prepareStatement(updateSql);
 			updateStmt.setString(1, comments);
 			updateStmt.setInt(2, transactionId);
-			
-			if(updateStmt.executeUpdate() != 1)
+
+			if (updateStmt.executeUpdate() != 1)
 			{
 				throw new IllegalStateException("Unable to update comments on "
 						+ "row with transaction id: " + transactionId);
@@ -298,6 +301,14 @@ public class JobDao extends Dao
 		int examId = rs.getInt("exam_id");
 
 		Exam exam = new ExamDao().getExam(examId);
+		if (exam == null)
+		{
+			logger.warn("Unable to load exam data for job id: " + job.getJobId()
+					+ " because no entry found was in v_exam_status "
+					+ " for exam id: " + examId + ". ");
+		}
+
+
 		job.setExam(exam);
 
 		return job;
