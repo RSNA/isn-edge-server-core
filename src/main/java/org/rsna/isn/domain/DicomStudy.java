@@ -302,7 +302,8 @@ public class DicomStudy
         this.kos = kos;
     }
 
-    private Map<String, DicomSeries> series = new LinkedHashMap();
+    private Map<String, DicomSeries> series = 
+			new LinkedHashMap<String, DicomSeries>();
 
     /**
      * Get the DICOM series associated with this study.

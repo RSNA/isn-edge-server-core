@@ -118,7 +118,7 @@ public class JobDao extends Dao
 	 *
 	 * @param mrn The MRN to search by
 	 * @param accNum The accession number to search by
-	 * @param status The status to search by
+	 * @param statuses The statuses to search by
 	 * @return A list of matching jobs in no specific order
 	 * @throws SQLException If there was an error retrieving the list of jobs
 	 * from the database.
@@ -139,7 +139,7 @@ public class JobDao extends Dao
 			stmt.setString(1, mrn);
 			stmt.setString(2, accNum);
 
-			List<Job> jobs = new ArrayList();
+			List<Job> jobs = new ArrayList<Job>();
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next())
 			{

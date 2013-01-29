@@ -101,7 +101,8 @@ public class DicomSeries
 		this.modality = modality;
 	}
 
-	private Map<String, DicomObject> objects = new LinkedHashMap();
+	private Map<String, DicomObject> objects = 
+			new LinkedHashMap<String, DicomObject>();
 
 	/**
 	 * Get the DICOM objects associated with this series.
