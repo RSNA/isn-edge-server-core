@@ -297,6 +297,8 @@ public class JobDao extends Dao
 		job.setStatusMessage(rs.getString("status_message"));
 		job.setDelay(rs.getInt("delay_in_hrs"));
 		job.setSingleUsePatientId(rs.getString("single_use_patient_id"));
+		job.setSendOnComplete(rs.getBoolean("send_on_complete"));
+		job.setRemainingRetries(rs.getInt("remaining_retries"));
 
 		int examId = rs.getInt("exam_id");
 

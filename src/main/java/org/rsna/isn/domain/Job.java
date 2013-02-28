@@ -27,8 +27,8 @@ package org.rsna.isn.domain;
  * This class represents a job.
  *
  * @author Wyatt Tellis
- * @version 2.1.0
- *
+ * @version 3.1.0
+ * @since 1.0.0
  */
 public class Job
 {
@@ -40,6 +40,8 @@ public class Job
     public static final int RSNA_WAITING_FOR_DELAY_EXPIRATION = 22;
 
     public static final int RSNA_STARTED_DICOM_C_MOVE = 23;
+
+    public static final int RSNA_WAITING_FOR_EXAM_COMPLETION = 24;
 
     public static final int RSNA_FAILED_TO_PREPARE_CONTENT = -20;
 
@@ -204,5 +206,53 @@ public class Job
     {
         return "job #" + jobId;
     }
+	
+		private boolean sendOnComplete = false;
+
+	/**
+	 * Get the value of sendOnComplete
+	 *
+	 * @return the value of sendOnComplete
+	 * @since 3.1.0
+	 */
+	public boolean isSendOnComplete()
+	{
+		return sendOnComplete;
+	}
+
+	/**
+	 * Set the value of sendOnComplete
+	 *
+	 * @param sendOnComplete new value of sendOnComplete
+	 * @since 3.1.0
+	 */
+	public void setSendOnComplete(boolean sendOnComplete)
+	{
+		this.sendOnComplete = sendOnComplete;
+	}
+
+	private int remainingRetries = 0;
+
+	/**
+	 * Get the value of remainingRetries
+	 *
+	 * @return the value of remainingRetries
+	 * @since 3.1.0
+	 */
+	public int getRemainingRetries()
+	{
+		return remainingRetries;
+	}
+
+	/**
+	 * Set the value of remainingRetries
+	 *
+	 * @param remainingRetries new value of remainingRetries
+	 * @since 3.1.0
+	 */
+	public void setRemainingRetries(int remainingRetries)
+	{
+		this.remainingRetries = remainingRetries;
+	}
 
 }
