@@ -20,6 +20,11 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
+ * 
+ * 
+ * 3.1.0
+ *      03/04/2013: Wyatt Tellis
+ *           * Added constants for supported exam statuses
  */
 package org.rsna.isn.domain;
 
@@ -29,11 +34,34 @@ import java.util.Date;
  * This class represents an exam
  *
  * @author Wyatt Tellis
- * @version 2.1.0
+ * @version 3.1.0
+ * @since 1.0.0
  *
  */
 public class Exam
 {
+	public static final String ORDERED = "ORDERED";
+
+	public static final String SCHEDULED = "SCHEDULED";
+
+	public static final String IN_PROGRESS = "IN-PROGRESS";
+
+	public static final String COMPLETED = "COMPLETED";
+
+	public static final String DICTATED = "DICTATED";
+
+	public static final String PRELIMINARY = "PRELIMINARY";
+
+	public static final String FINALIZED = "FINALIZED";
+
+	public static final String REVISED = "REVISED";
+
+	public static final String ADDENDED = "ADDENDED";
+
+	public static final String NON_REPORTABLE = "NON-REPORTABLE";
+
+	public static final String CANCELED = "CANCELED";
+
 	private String mrn = "";
 
 	/**
@@ -174,9 +202,8 @@ public class Exam
 		str.append(mrn);
 		str.append("/");
 		str.append(accNum);
-		
+
 		return str.toString();
 	}
 
-	
 }

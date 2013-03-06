@@ -23,6 +23,9 @@
  */
 package org.rsna.isn.domain;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 /**
  * This class represents a job.
  *
@@ -32,182 +35,181 @@ package org.rsna.isn.domain;
  */
 public class Job
 {
+	public static final int RSNA_WAITING_FOR_PREPARE_CONTENT = 1;
 
-    public static final int RSNA_WAITING_FOR_PREPARE_CONTENT = 1;
+	public static final int RSNA_WAITING_FOR_EXAM_FINALIZATION = 21;
 
-    public static final int RSNA_WAITING_FOR_EXAM_FINALIZATION = 21;
+	public static final int RSNA_WAITING_FOR_DELAY_EXPIRATION = 22;
 
-    public static final int RSNA_WAITING_FOR_DELAY_EXPIRATION = 22;
+	public static final int RSNA_STARTED_DICOM_C_MOVE = 23;
 
-    public static final int RSNA_STARTED_DICOM_C_MOVE = 23;
+	public static final int RSNA_WAITING_FOR_EXAM_COMPLETION = 24;
 
-    public static final int RSNA_WAITING_FOR_EXAM_COMPLETION = 24;
+	public static final int RSNA_FAILED_TO_PREPARE_CONTENT = -20;
 
-    public static final int RSNA_FAILED_TO_PREPARE_CONTENT = -20;
+	public static final int RSNA_UNABLE_TO_FIND_IMAGES = -21;
 
-    public static final int RSNA_UNABLE_TO_FIND_IMAGES = -21;
+	public static final int RSNA_DICOM_C_MOVE_FAILED = -23;
 
-    public static final int RSNA_DICOM_C_MOVE_FAILED = -23;
+	public static final int RSNA_WAITING_FOR_TRANSFER_CONTENT = 30;
 
-    public static final int RSNA_WAITING_FOR_TRANSFER_CONTENT = 30;
+	public static final int RSNA_STARTED_TRANSFER_CONTENT = 31;
 
-    public static final int RSNA_STARTED_TRANSFER_CONTENT = 31;
+	public static final int RSNA_STARTED_KOS_GENERATION = 32;
 
-    public static final int RSNA_STARTED_KOS_GENERATION = 32;
+	public static final int RSNA_STARTED_PATIENT_REGISTRATION = 33;
 
-    public static final int RSNA_STARTED_PATIENT_REGISTRATION = 33;
+	public static final int RSNA_STARTED_DOCUMENT_SUBMISSION = 34;
 
-    public static final int RSNA_STARTED_DOCUMENT_SUBMISSION = 34;
+	public static final int RSNA_FAILED_TO_TRANSFER_TO_CLEARINGHOUSE = -30;
 
-    public static final int RSNA_FAILED_TO_TRANSFER_TO_CLEARINGHOUSE = -30;
+	public static final int RSNA_FAILED_TO_GENERATE_KOS = -32;
 
-    public static final int RSNA_FAILED_TO_GENERATE_KOS = -32;
+	public static final int RSNA_FAILED_TO_REGISTER_PATIENT = -33;
 
-    public static final int RSNA_FAILED_TO_REGISTER_PATIENT = -33;
+	public static final int RSNA_FAILED_TO_SUBMIT_DOCUMENTS = -34;
 
-    public static final int RSNA_FAILED_TO_SUBMIT_DOCUMENTS = -34;
+	public static final int RSNA_COMPLETED_TRANSFER_TO_CLEARINGHOUSE = 40;
 
-    public static final int RSNA_COMPLETED_TRANSFER_TO_CLEARINGHOUSE = 40;
+	private int jobId = -1;
 
-    private int jobId = -1;
+	/**
+	 * Get the value of jobId
+	 *
+	 * @return the value of jobId
+	 */
+	public int getJobId()
+	{
+		return jobId;
+	}
 
-    /**
-     * Get the value of jobId
-     *
-     * @return the value of jobId
-     */
-    public int getJobId()
-    {
-        return jobId;
-    }
+	/**
+	 * Set the value of jobId
+	 *
+	 * @param jobId new value of jobId
+	 */
+	public void setJobId(int jobId)
+	{
+		this.jobId = jobId;
+	}
 
-    /**
-     * Set the value of jobId
-     *
-     * @param jobId new value of jobId
-     */
-    public void setJobId(int jobId)
-    {
-        this.jobId = jobId;
-    }
+	private int status = 0;
 
-    private int status = 0;
+	/**
+	 * Get the value of status
+	 *
+	 * @return the value of status
+	 */
+	public int getStatus()
+	{
+		return status;
+	}
 
-    /**
-     * Get the value of status
-     *
-     * @return the value of status
-     */
-    public int getStatus()
-    {
-        return status;
-    }
+	/**
+	 * Set the value of status
+	 *
+	 * @param status new value of status
+	 */
+	public void setStatus(int status)
+	{
+		this.status = status;
+	}
 
-    /**
-     * Set the value of status
-     *
-     * @param status new value of status
-     */
-    public void setStatus(int status)
-    {
-        this.status = status;
-    }
+	private String statusMessage = "";
 
-    private String statusMessage = "";
+	/**
+	 * Get the value of statusMessage
+	 *
+	 * @return the value of statusMessage
+	 */
+	public String getStatusMessage()
+	{
+		return statusMessage;
+	}
 
-    /**
-     * Get the value of statusMessage
-     *
-     * @return the value of statusMessage
-     */
-    public String getStatusMessage()
-    {
-        return statusMessage;
-    }
+	/**
+	 * Set the value of statusMessage
+	 *
+	 * @param statusMessage new value of statusMessage
+	 */
+	public void setStatusMessage(String statusMessage)
+	{
+		this.statusMessage = statusMessage;
+	}
 
-    /**
-     * Set the value of statusMessage
-     *
-     * @param statusMessage new value of statusMessage
-     */
-    public void setStatusMessage(String statusMessage)
-    {
-        this.statusMessage = statusMessage;
-    }
+	private int delay = 0;
 
-    private int delay = 0;
+	/**
+	 * Get the value of delay
+	 *
+	 * @return the value of delay
+	 */
+	public int getDelay()
+	{
+		return delay;
+	}
 
-    /**
-     * Get the value of delay
-     *
-     * @return the value of delay
-     */
-    public int getDelay()
-    {
-        return delay;
-    }
+	/**
+	 * Set the value of delay
+	 *
+	 * @param delay new value of delay
+	 */
+	public void setDelay(int delay)
+	{
+		this.delay = delay;
+	}
 
-    /**
-     * Set the value of delay
-     *
-     * @param delay new value of delay
-     */
-    public void setDelay(int delay)
-    {
-        this.delay = delay;
-    }
+	private Exam exam;
 
-    private Exam exam;
+	/**
+	 * Get the value of exam
+	 *
+	 * @return the value of exam
+	 */
+	public Exam getExam()
+	{
+		return exam;
+	}
 
-    /**
-     * Get the value of exam
-     *
-     * @return the value of exam
-     */
-    public Exam getExam()
-    {
-        return exam;
-    }
+	/**
+	 * Set the value of exam
+	 *
+	 * @param exam new value of exam
+	 */
+	public void setExam(Exam exam)
+	{
+		this.exam = exam;
+	}
 
-    /**
-     * Set the value of exam
-     *
-     * @param exam new value of exam
-     */
-    public void setExam(Exam exam)
-    {
-        this.exam = exam;
-    }
+	private String singleUsePatientId;
 
-    private String singleUsePatientId;
+	/**
+	 * Get the value of singleUsePatientId
+	 *
+	 * @return the value of singleUsePatientId
+	 */
+	public String getSingleUsePatientId()
+	{
+		return singleUsePatientId;
+	}
 
-    /**
-     * Get the value of singleUsePatientId
-     *
-     * @return the value of singleUsePatientId
-     */
-    public String getSingleUsePatientId()
-    {
-        return singleUsePatientId;
-    }
+	/**
+	 * Set the value of singleUsePatientId
+	 *
+	 * @param singleUsePatientId new value of singleUsePatientId
+	 */
+	public void setSingleUsePatientId(String singleUsePatientId)
+	{
+		this.singleUsePatientId = singleUsePatientId;
+	}
 
-    /**
-     * Set the value of singleUsePatientId
-     *
-     * @param singleUsePatientId new value of singleUsePatientId
-     */
-    public void setSingleUsePatientId(String singleUsePatientId)
-    {
-        this.singleUsePatientId = singleUsePatientId;
-    }
+	@Override
+	public String toString()
+	{
+		return "job #" + jobId;
+	}
 
-    @Override
-    public String toString()
-    {
-        return "job #" + jobId;
-    }
-	
-		private boolean sendOnComplete = false;
+	private boolean sendOnComplete = false;
 
 	/**
 	 * Get the value of sendOnComplete

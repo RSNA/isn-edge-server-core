@@ -36,6 +36,7 @@ import java.sql.SQLException;
  * 
  * @author Wyatt Tellis
  * @version 2.1.0
+ * @since 1.0.0
  */
 public class ConfigurationDao extends Dao
 {
