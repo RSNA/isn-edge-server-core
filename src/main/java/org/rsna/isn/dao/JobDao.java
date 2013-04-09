@@ -27,10 +27,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
@@ -81,6 +84,117 @@ public class JobDao extends Dao
 			con.close();
 		}
 
+	}
+	
+	/**
+	 * Locates jobs that are eligible to be retried.
+	 * 
+	 * @param lastUpdate Maximum transaction date.  Only jobs who last update 
+	 * timestamp is older than this date will be retrieved.
+	 * @param statuses Required error statuses.  Only jobs in the specified
+	 * statuses will be retrieved. 
+	 * 
+	 * @return A set of jobs. 
+	 * 
+	 * @throws SQLException If there was a database error
+	 * 
+	 * @since 3.1.0
+	 */
+	public Set<Job> findRetryableJobs(Date lastUpdate, Integer... statuses) 
+			throws SQLException
+	{		
+		Connection con = getConnection();
+		try
+		{
+			Set<Job> jobs = new LinkedHashSet<Job>();
+			
+			if(ArrayUtils.isEmpty(statuses))
+				return jobs;
+
+			String select = "SELECT * FROM v_job_status "
+					+ "WHERE status IN (" + StringUtils.join(statuses, ',') + ") "
+					+ "AND remaining_retries > 0 "
+					+ "AND last_transaction_timestamp < ?";
+
+			PreparedStatement stmt = con.prepareStatement(select);
+			stmt.setTimestamp(1, new Timestamp(lastUpdate.getTime()));
+			
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next())
+			{
+				Job job = buildEntity(rs);
+				jobs.add(job);
+			}
+
+			return jobs;
+		}
+		finally
+		{
+			con.close();
+		}
+	}
+	
+	/**
+	 * Retry the specified job. 
+	 * 
+	 * @param jobId The id of the job to retry.
+	 * @return True if the job was retried, false if not
+	 * 
+	 * @throws SQLException If there was a database error
+	 * 
+	 * @since 3.1.0
+	 */
+	public boolean retryJob(int jobId) throws SQLException
+	{
+		Job job = getJobById(jobId);
+		if(job == null)
+			return false;
+		
+		int retries = job.getRemainingRetries();
+		if(retries < 1)
+			return false;
+		
+		Connection con = getConnection();
+		try
+		{
+			con.setAutoCommit(false);
+			
+			String updateSql = "UPDATE jobs SET remaining_retries = ? WHERE job_id = ?";
+			PreparedStatement updateStmt = con.prepareStatement(updateSql);
+			updateStmt.setInt(1, retries - 1);
+			updateStmt.setInt(2, jobId);
+			
+			if(updateStmt.executeUpdate() != 1)
+			{
+				throw new RuntimeException("Unable to update remaining "
+						+ "retries value of job #" + jobId);
+			}
+			
+			
+			String comment = "Auto retry number " + retries;			
+			String insertSql = "INSERT INTO transactions"
+					+ "(job_id, status_code, comments) VALUES (?, 1, ?)";
+
+			PreparedStatement insertStmt = con.prepareStatement(insertSql);
+			insertStmt.setInt(1, jobId);
+			insertStmt.setString(2, comment);
+			insertStmt.execute();
+			
+			
+			con.commit();
+			
+			return true;
+		}
+		catch(SQLException ex)
+		{
+			con.rollback();
+			
+			throw ex;
+		}
+		finally
+		{
+			con.close();
+		}
 	}
 
 	/**
