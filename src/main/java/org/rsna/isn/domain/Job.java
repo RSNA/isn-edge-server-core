@@ -30,7 +30,7 @@ import java.util.Date;
  * This class represents a job.
  *
  * @author Wyatt Tellis
- * @version 3.1.0
+ * @version 3.2.0
  * @since 1.0.0
  */
 public class Job
@@ -92,7 +92,30 @@ public class Job
 	{
 		this.jobId = jobId;
 	}
+        
+ 	private int jobSetId = -1;
 
+	/**
+	 * Get the value of jobSetId
+	 *
+	 * @return the value of jobSetId
+	 */
+        public int getJobSetId()
+        {
+                return jobSetId;
+        }
+        
+        /**
+	 * Set the value of jobSetId
+	 *
+	 * @param jobSetId new value of jobSetId
+	 */      
+        public void setJobSetId(int jobSetId)
+        {
+                this.jobSetId = jobSetId;
+        }
+
+        
 	private int status = 0;
 
 	/**
@@ -256,5 +279,27 @@ public class Job
 	{
 		this.remainingRetries = remainingRetries;
 	}
-
+        
+        private String EmailAddress = "";
+        
+        /**
+	 * Get the value of EmailAddress
+	 *
+	 * @return the value of EmailAddress
+	 * @since 3.2.0
+	 */
+	public String getEmailAddress()
+	{
+		return EmailAddress;
+	}
+	/**
+	 * Set the value of EmailAddress
+	 *
+	 * @param EmailAddress new value of EmailAddress
+	 * @since 3.2.0
+	 */
+	public void setEmailAddress(String EmailAddress)
+	{
+		this.EmailAddress = EmailAddress;
+	}
 }
