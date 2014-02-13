@@ -34,7 +34,7 @@ import java.util.Date;
  * This class represents an exam
  *
  * @author Wyatt Tellis
- * @version 3.1.0
+ * @version 3.2.0
  * @since 1.0.0
  *
  */
@@ -105,7 +105,51 @@ public class Exam
 	{
 		this.accNum = accNum;
 	}
+        
+        private String patientName = "";
 
+	/**
+	 * Get the value of patientName
+	 *
+	 * @return the value of patientName
+	 */
+	public String getPatientName()
+        {
+		return patientName;
+	}
+
+	/**
+	 * Set the value of patientName
+	 *
+	 * @param patientName new value of patientName
+	 */
+	public void setPatientName(String patientName)
+	{
+		this.patientName = patientName;
+	}
+        
+	private String email = "";
+
+	/**
+	 * Get the value of email
+	 *
+	 * @return the value of email
+	 */
+	public String getEmail()
+        {
+		return email;
+	}
+
+	/**
+	 * Set the value of email
+	 *
+	 * @param email new value of email
+	 */
+	public void setEmail(String email)
+	{
+		this.email = email;
+	}
+        
 	private String status = "";
 
 	/**

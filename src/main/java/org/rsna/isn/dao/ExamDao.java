@@ -34,7 +34,8 @@ import org.rsna.isn.domain.Exam;
  * Programmatic interface to the "v_exam_status" view.
  * 
  * @author Wyatt Tellis
- * @version 2.1.0
+ * @version 3.2.0
+ * @since 2.1.0
  * 
  */
 public class ExamDao extends Dao
@@ -58,12 +59,14 @@ public class ExamDao extends Dao
 			if (rs.next())
 			{
 				Exam exam = new Exam();
-
+                                
+                                exam.setPatientName(rs.getString("patient_name"));
 				exam.setMrn(rs.getString("mrn"));
 				exam.setAccNum(rs.getString("accession_number"));
 				exam.setStatus(rs.getString("status"));
 				exam.setStatusTimestamp(rs.getTimestamp("status_timestamp"));
 				exam.setReport(rs.getString("report_text"));
+                                exam.setEmail(rs.getString("email_address"));
 
 				String signer = rs.getString("signer");
 				if (StringUtils.isNotBlank(signer))

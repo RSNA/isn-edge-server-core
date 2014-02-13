@@ -39,12 +39,14 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.rsna.isn.domain.Exam;
 import org.rsna.isn.domain.Job;
+import org.rsna.isn.util.Email;
+import org.rsna.isn.dao.EmailDao;
 
 /**
  * Programmatic interface to the "v_job_status" view.
  *
  * @author Wyatt Tellis
- * @version 3.1.0
+ * @version 3.2.0
  * @since 1.0.0
  *
  */
@@ -329,6 +331,44 @@ public class JobDao extends Dao
 		{
 			con.close();
 		}
+                
+                //send email for jobs that are C-MOVE failed with 0 retries 
+                //or all other negative statuses
+                if ((status == Job.RSNA_DICOM_C_MOVE_FAILED && job.getRemainingRetries() == 0) || 
+                        (status != Job.RSNA_DICOM_C_MOVE_FAILED))
+                {
+                    
+                        EmailDao dao = new EmailDao();
+                                               
+                        //send email to patient when jobset is complete
+                        if (dao.isEmailPatient() && isJobSetComplete(job.getJobSetId()))
+                        {
+                                Email email = new Email();
+                                
+                                //build the body of the email from the template and data from job
+                                String body = email.composeBody(job,dao.getConfiguration("patient_email_body"),message,status);
+                                email.setBody(body);
+                                email.setRecipient(job.getEmailAddress());
+                                email.setSubject(dao.getConfiguration("patient_email_subject"));
+                                dao.addtoQueue(email);                             
+                        }
+                        
+                        //send mail to administrative user if email error flag set and error code set
+                        if (dao.isSentEmailErrors() && isEmailFlagSet(status))
+                        {
+                                                              
+                                Email email = new Email();
+                                
+                                //build the body of the email from the template and data from job
+                                String body = email.composeBody(job,dao.getConfiguration("error_email_body"),message,status);
+                                email.setBody(body);
+                                
+                                email.setRecipient(dao.getConfiguration("error_email_recipients"));
+                                email.setSubject(getStatusMsg(status));
+                                dao.addtoQueue(email);
+                        }
+                } 
+
 	}
 
 	/**
@@ -405,7 +445,8 @@ public class JobDao extends Dao
 	private Job buildEntity(ResultSet rs) throws SQLException
 	{
 		Job job = new Job();
-
+                
+                job.setJobSetId(rs.getInt("job_set_id"));
 		job.setJobId(rs.getInt("job_id"));
 		job.setStatus(rs.getInt("status"));
 		job.setStatusMessage(rs.getString("status_message"));
@@ -413,6 +454,7 @@ public class JobDao extends Dao
 		job.setSingleUsePatientId(rs.getString("single_use_patient_id"));
 		job.setSendOnComplete(rs.getBoolean("send_on_complete"));
 		job.setRemainingRetries(rs.getInt("remaining_retries"));
+                job.setEmailAddress(rs.getString("email_address"));
 
 		int examId = rs.getInt("exam_id");
 
@@ -429,5 +471,87 @@ public class JobDao extends Dao
 
 		return job;
 	}
+        
+        public boolean isJobSetComplete(int jobSetId) throws SQLException
+        {
+                Connection con = getConnection();
 
+		try
+		{
+                    	String selectSql = "SELECT status from v_job_status WHERE job_set_id = ?";
+
+			PreparedStatement stmt = con.prepareStatement(selectSql);
+			stmt.setInt(1, jobSetId);
+        
+                        ResultSet rs = stmt.executeQuery();
+                    
+
+                        while (rs.next())
+                        {
+                                if (rs.getInt("status") != Job.RSNA_COMPLETED_TRANSFER_TO_CLEARINGHOUSE)
+                                {
+                                        return false;
+                                }
+                        }
+                                
+                        return true;
+		}
+		finally
+		{
+			con.close();
+		}
+        }
+        
+        public boolean isEmailFlagSet(int status) throws SQLException
+        {
+                Connection con = getConnection();
+
+                try
+                {
+                        String selectSql = "SELECT send_alert from status_codes WHERE status_code = ?";
+
+                        PreparedStatement stmt = con.prepareStatement(selectSql);
+                        stmt.setInt(1, status);
+
+                        ResultSet rs = stmt.executeQuery();
+                        
+                        while (rs.next())
+                        {
+                                return rs.getBoolean("send_alert");
+                        }                                                   
+
+                        return false;
+                }
+                finally
+                {
+                        con.close();
+                }
+        }
+  
+        public String getStatusMsg(int status) throws SQLException
+        {
+                Connection con = getConnection();
+
+                try
+                {
+                        String selectSql = "SELECT description from status_codes WHERE status_code = ?";
+
+                        PreparedStatement stmt = con.prepareStatement(selectSql);
+                        stmt.setInt(1, status);
+
+                        ResultSet rs = stmt.executeQuery();
+                        
+                        while (rs.next())
+                        {
+                                return rs.getString("description");
+                        }                                                   
+
+                        return null;
+                }
+                finally
+                {
+                        con.close();
+                }         
+            
+        }
 }
