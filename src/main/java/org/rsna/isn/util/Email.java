@@ -128,12 +128,12 @@ public class Email {
                     send(this.recipient,this.subject,this.body);
                     
                     //flag sent in email queue
-                    eDao.updateQueue(emailQueueId,true,false,"");      
+                    eDao.updateQueue(emailQueueId,true,false,"Email Sent");      
             } 
             catch (Exception ex) 
             {
                     //flag failed in email queue
-                    eDao.updateQueue(emailQueueId,false,true,"");
+                    eDao.updateQueue(emailQueueId,false,true,ex.toString());
             } 
     }
     
