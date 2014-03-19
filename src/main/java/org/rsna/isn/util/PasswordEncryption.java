@@ -1,4 +1,4 @@
-/* Copyright (c) <2010>, <Radiological Society of North America>
+/* Copyright (c) <2014>, <Radiological Society of North America>
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
  * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
@@ -35,7 +35,7 @@ import org.jasypt.util.text.BasicTextEncryptor;
  */
 public class PasswordEncryption {
     
-    private static String key = "rsna.org";
+    private static final String key = "rsna.org";
     
     public static String encrypt(String password)
     {

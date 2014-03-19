@@ -343,29 +343,47 @@ public class JobDao extends Dao
                         //send email to patient when jobset is complete
                         if (dao.isEmailPatient() && isJobSetComplete(job.getJobSetId()))
                         {
-                                Email email = new Email();
+                                String patientEmail = job.getEmailAddress();
                                 
-                                //build the body of the email from the template and data from job
-                                String body = email.composeBody(job,dao.getConfiguration("patient_email_body"),message,status);
-                                email.setBody(body);
-                                email.setRecipient(job.getEmailAddress());
-                                email.setSubject(dao.getConfiguration("patient_email_subject"));
-                                dao.addtoQueue(email);                             
+                                if (patientEmail.isEmpty())
+                                {             
+                                        logger.warn("Patient email job could not created because patient's email is missing for job# " + job.getJobId());
+                                }         
+                                else 
+                                {
+                                        Email email = new Email();
+
+                                        //build the body of the email from the template and data from job
+                                        String body = email.composeBody(job,dao.getConfiguration("patient_email_body"),message,status);
+                                        email.setBody(body);
+                                        email.setRecipient(patientEmail);
+                                        email.setSubject(dao.getConfiguration("patient_email_subject"));
+                                        dao.addtoQueue(email);       
+                                }
                         }
                         
                         //send mail to administrative user if email error flag set and error code set
                         if (dao.isSentEmailErrors() && isEmailFlagSet(status))
                         {
-                                                              
-                                Email email = new Email();
+                                String adminEmail = dao.getConfiguration("error_email_recipients");      
                                 
-                                //build the body of the email from the template and data from job
-                                String body = email.composeBody(job,dao.getConfiguration("error_email_body"),message,status);
-                                email.setBody(body);
+                                if (adminEmail.isEmpty())
+                                {             
+                                        logger.warn("Administrative email job could not created because email address does not exist in the database. Job " + job.getJobId());
+                                }     
+                                else 
+                                {
+                                        Email email = new Email();
                                 
-                                email.setRecipient(dao.getConfiguration("error_email_recipients"));
-                                email.setSubject(getStatusMsg(status));
-                                dao.addtoQueue(email);
+                                        //build the body of the email from the template and data from job
+                                        String body = email.composeBody(job,dao.getConfiguration("error_email_body"),message,status);
+                                        email.setBody(body);
+
+                                        email.setRecipient(adminEmail);
+                                        email.setSubject(getStatusMsg(status));
+                                        dao.addtoQueue(email);                          
+                                }
+
                         }
                 } 
 
