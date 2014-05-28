@@ -249,5 +249,17 @@ public class Exam
 
 		return str.toString();
 	}
+        
+        public boolean isReportAvailable()
+        {
+                if (this.report == null || this.report.isEmpty())
+                {
+                        return false;
+                }
+                else
+                {
+                        return true;
+                }
+        }
 
 }

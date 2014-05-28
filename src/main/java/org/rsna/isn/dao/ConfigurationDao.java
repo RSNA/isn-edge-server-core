@@ -35,7 +35,7 @@ import java.sql.SQLException;
  * Programmatic interface to the "configurations" table.
  * 
  * @author Wyatt Tellis
- * @version 2.1.0
+ * @version 3.1.0
  * @since 1.0.0
  */
 public class ConfigurationDao extends Dao
@@ -65,4 +65,9 @@ public class ConfigurationDao extends Dao
 
 		return config;
 	}
+        
+        public boolean isAttachDicomReport() throws SQLException
+        {
+                return Boolean.parseBoolean(getConfiguration("attach-dicom-report"));
+        }
 }

@@ -89,4 +89,12 @@ public class FormatText {
                 
             return firstName + middleName + lastName;
     }
+     /**
+     * Wraps string with <report></report> elements
+     *
+     */
+    public static String addReportTag(String report)
+    {
+            return "<report>" + report + "</report>";    
+    }
 }
