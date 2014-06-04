@@ -174,9 +174,10 @@ public class EmailConfigurationDao extends Dao
                 }           
         }
         
-        public void updateEmailPropFile() throws SQLException
+        public static void updateEmailPropFile() throws SQLException
         {
-            Connection con = getConnection();
+            EmailConfigurationDao config = new EmailConfigurationDao();
+            Connection con = config.getConnection();
             
             Properties props = new Properties();
             
