@@ -80,9 +80,7 @@ public class EmailConfigurationDao extends Dao
         public Properties getEmailConfiguration() throws SQLException
         {
             	Connection con = getConnection();
-		//PreparedStatement stmt = con.prepareStatement("SELECT * FROM email_configurations WHERE \"key\" LIKE ?");
-                //stmt.setString(1, "mail.%");
-                PreparedStatement stmt = con.prepareStatement("SELECT * FROM email_configurations");
+                PreparedStatement stmt = con.prepareStatement("SELECT * FROM email_configurations WHERE value != ''");
                 
                 
                 Properties props = new Properties();

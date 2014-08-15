@@ -46,6 +46,7 @@ import javax.mail.internet.MimeMultipart;
 import org.apache.log4j.Logger;
 import org.antlr.stringtemplate.StringTemplate;
 import org.apache.commons.lang.StringUtils;
+import org.rsna.isn.dao.ConfigurationDao;
 
 import org.rsna.isn.dao.EmailConfigurationDao;
 import org.rsna.isn.dao.EmailDao;
@@ -105,7 +106,7 @@ public class Email {
      * @return The debug output
      * @throws SQLException If there was an error retrieving the value
      */  
-    public static String sendUsingPropertiesFile(String subject, String body) throws Exception
+    public String sendUsingPropertiesFile(String subject, String body) throws Exception
     {    
             Properties props = getPropertiesFromFile();
             String recipients = props.getProperty("error_email_recipients");
@@ -143,7 +144,16 @@ public class Email {
      * @return The debug output
      * @throws SQLException If there was an error retrieving the value
      */  
-    public static String send(String recipient,String subject, String body) throws Exception
+    
+    public  String send(String subject, String body) throws Exception
+    {          
+            Properties props = getPropertiesFromDB();
+            String recipients = props.getProperty("error_email_recipients");
+            
+            return send(recipients,subject,body,getPropertiesFromDB());
+    }
+        
+    public  String send(String recipient,String subject, String body) throws Exception
     {          
             return send(recipient,subject,body,getPropertiesFromDB());
     }
@@ -154,18 +164,23 @@ public class Email {
      * @return The value or null if the key is not in the "configurations" table
      * @throws SQLException If there was an error retrieving the value
      */  
-    public static String send(String receivers,String subject, String body, Properties props) throws AddressException, MessagingException
+    public String send(String receivers,String subject, String body, Properties props) throws AddressException, MessagingException
     {       
             //Prepare stream for debug output
             ByteArrayOutputStream debugOutput = new ByteArrayOutputStream();
             PrintStream ps = new PrintStream(debugOutput);
             
-            InternetAddress[] recipient = validateAddress(receivers);
+            InternetAddress[] recipients = validateAddress(receivers);
             InternetAddress[] replyTo = validateAddress(props.getProperty("reply_to_email")); 
             InternetAddress[] from = validateAddress(props.getProperty("mail.smtp.from"));
             
             //reset property with bounce email
-            props.put("mail.smtp.from",props.getProperty("bounce_email"));
+            String bounce_email = props.getProperty("bounce_email");
+            
+            if (bounce_email != null)
+            {
+                     props.put("mail.smtp.from",props.getProperty("bounce_email"));
+            }
             
             Session session = buildSessionFromProperties(props);       
                 
@@ -179,7 +194,7 @@ public class Email {
 
                     message.addFrom(from);
                     message.setReplyTo(replyTo);
-                    message.setRecipients(Message.RecipientType.TO,recipient);
+                    message.setRecipients(Message.RecipientType.TO,recipients);
                     message.setSubject(subject);  
 
 
@@ -272,7 +287,7 @@ public class Email {
     *
     * @return The body of email
     */
-    public String composeBody(Job job, String template, String message, int jobStatus)
+    public String composeBody(Job job, String template, String message, int jobStatus) throws SQLException
     {   
             //clean the template
             template = template.toString().replaceAll("\r","\n");
@@ -282,10 +297,13 @@ public class Email {
             emailBody.setAttribute("patientname",FormatText.formatPatientName(job.getExam().getPatientName()));       
             emailBody.setAttribute("accession",job.getExam().getAccNum());
             emailBody.setAttribute("jobid",job.getJobId());
-            emailBody.setAttribute("msg",message);
-            emailBody.setAttribute("status",jobStatus);
-            emailBody.setAttribute("retries",job.getRemainingRetries());
+            emailBody.setAttribute("jobstatus",jobStatus);
+            emailBody.setAttribute("errormsg",message);
 
+
+            ConfigurationDao config = new ConfigurationDao();
+            emailBody.setAttribute("sitename",config.getConfiguration("site_id"));
+            
             return emailBody.toString();
     }
     
@@ -293,7 +311,7 @@ public class Email {
      * Construct a session from properties
      * @return The email session
      */  
-    public static Session buildSessionFromProperties(Properties javaMailProperties)
+    public Session buildSessionFromProperties(Properties javaMailProperties)
     {
             Session session = Session.getDefaultInstance(javaMailProperties);  
 
@@ -338,7 +356,7 @@ public class Email {
             return recipient;
     }
     
-    public static Properties getPropertiesFromDB()
+    public Properties getPropertiesFromDB()
     {
             EmailConfigurationDao config = new EmailConfigurationDao();
             Properties props = new Properties();
@@ -355,7 +373,7 @@ public class Email {
             return props;   
     }
     
-    public static Properties getPropertiesFromFile()
+    public Properties getPropertiesFromFile()
     {
             File emailPropsFile = new File(Environment.getConfDir(), "email.properties");
             Properties props = new Properties();
