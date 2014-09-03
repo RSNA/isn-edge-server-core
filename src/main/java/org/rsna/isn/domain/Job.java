@@ -23,8 +23,6 @@
  */
 package org.rsna.isn.domain;
 
-import java.sql.Timestamp;
-import java.util.Date;
 
 /**
  * This class represents a job.
@@ -44,13 +42,15 @@ public class Job
 	public static final int RSNA_STARTED_DICOM_C_MOVE = 23;
 
 	public static final int RSNA_WAITING_FOR_EXAM_COMPLETION = 24;
-
+       
 	public static final int RSNA_FAILED_TO_PREPARE_CONTENT = -20;
 
 	public static final int RSNA_UNABLE_TO_FIND_IMAGES = -21;
 
 	public static final int RSNA_DICOM_C_MOVE_FAILED = -23;
 
+        public static final int RSNA_EXAM_CANCELED = -24;
+        
 	public static final int RSNA_WAITING_FOR_TRANSFER_CONTENT = 30;
 
 	public static final int RSNA_STARTED_TRANSFER_CONTENT = 31;
