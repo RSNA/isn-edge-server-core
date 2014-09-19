@@ -23,10 +23,7 @@
  */
 package org.rsna.isn.util;
 
-import java.io.IOException;
 import java.io.PrintStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.ByteArrayOutputStream;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -50,6 +47,7 @@ import org.rsna.isn.dao.ConfigurationDao;
 
 import org.rsna.isn.dao.EmailConfigurationDao;
 import org.rsna.isn.dao.EmailDao;
+import org.rsna.isn.domain.Email;
 import org.rsna.isn.domain.Job;
 
 
@@ -61,81 +59,36 @@ import org.rsna.isn.domain.Job;
  * @since 3.2.0
  */
 
-public class Email {
- 
-    private String recipient;
-    private String subject;
-    private String body;
-    
-    private static final Logger logger = Logger.getLogger(Email.class);
-    
-    public void setSubject(String subject)
-    {
-            this.subject = subject;
-    }
-   
-    public String getSubject()
-    {
-            return subject;
-    }
-     
-    public void setRecipient(String recipient)
-    {
-            this.recipient = recipient;
-    }
-  
-    public String getRecipient()
-    {
-            return recipient;
-    }
-        
-    public void setBody(String body)
-    {
-            this.body = body;
-    }
-    
-    public String getBody()
-    {
-            return body;
-    }
+public class EmailUtil {
 
-    
-     /**
-     * Sends email using configurations from properties file
-     * 
-     * @return The debug output
-     * @throws SQLException If there was an error retrieving the value
-     */  
-    public String sendUsingPropertiesFile(String subject, String body) throws Exception
-    {    
-            Properties props = getPropertiesFromFile();
-            String recipients = props.getProperty("error_email_recipients");
-            
-            return send(recipients,subject,body,props);
-    }
-    
+    private static final Logger logger = Logger.getLogger(EmailUtil.class);
+ 
      /**
      * Send email from a queue
      * 
      * @return The value or null if the key is not in the "configurations" table
      * @throws SQLException If there was an error retrieving the value
      */  
-    public void send(int emailQueueId) throws SQLException     
+    public static void sendInQueue(Email email) throws SQLException     
     {
-            EmailDao eDao = new EmailDao();
+            EmailDao queue = new EmailDao();
             
             try 
             {
-                    send(this.recipient,this.subject,this.body);
-                    
+                    send(email);
                     //flag sent in email queue
-                    eDao.updateQueue(emailQueueId,true,false,"Email Sent");      
+                    queue.updateQueue(email.getEmailId(),true,false,"Email Sent");      
             } 
             catch (Exception ex) 
             {
                     //flag failed in email queue
-                    eDao.updateQueue(emailQueueId,false,true,ex.toString());
+                    queue.updateQueue(email.getEmailId(),false,true,ex.toString());
             } 
+    }
+
+    public static String send(Email email) throws Exception
+    {              
+            return send(email.getRecipient(),email.getSubject(),email.getBody());
     }
     
      /**
@@ -144,32 +97,21 @@ public class Email {
      * @return The debug output
      * @throws SQLException If there was an error retrieving the value
      */  
-    
-    public  String send(String subject, String body) throws Exception
+    public static String send(String subject, String body) throws Exception
     {          
-            Properties props = getPropertiesFromDB();
+            Properties props = getProperties();
             String recipients = props.getProperty("error_email_recipients");
             
-            return send(recipients,subject,body,getPropertiesFromDB());
+            return send(recipients,subject,body);
     }
-        
-    public  String send(String recipient,String subject, String body) throws Exception
-    {          
-            return send(recipient,subject,body,getPropertiesFromDB());
-    }
-    
-     /**
-     * Performs the actual sending of email
-     * 
-     * @return The value or null if the key is not in the "configurations" table
-     * @throws SQLException If there was an error retrieving the value
-     */  
-    public String send(String receivers,String subject, String body, Properties props) throws AddressException, MessagingException
+
+    public static String send(String receivers, String subject, String body) throws AddressException, MessagingException
     {       
             //Prepare stream for debug output
             ByteArrayOutputStream debugOutput = new ByteArrayOutputStream();
             PrintStream ps = new PrintStream(debugOutput);
             
+            Properties props = getProperties();
             InternetAddress[] recipients = validateAddress(receivers);
             InternetAddress[] replyTo = validateAddress(props.getProperty("reply_to_email")); 
             InternetAddress[] from = validateAddress(props.getProperty("mail.smtp.from"));
@@ -238,7 +180,29 @@ public class Email {
 
             return debugOutput.toString();
     }
-    
+ 
+    // move to email util class. make static and return string
+    public static String composeBody(Job job, String template, String message, int jobStatus, String jobStatusMsg) throws SQLException
+    {   
+            //clean the template
+            template = template.toString().replaceAll("\r","\n");
+
+            StringTemplate emailBody = new StringTemplate(template);
+
+            emailBody.setAttribute("patientname",FormatText.formatPatientName(job.getExam().getPatientName()));       
+            emailBody.setAttribute("accession",job.getExam().getAccNum());
+            emailBody.setAttribute("jobid",job.getJobId());
+            emailBody.setAttribute("jobstatus",jobStatusMsg);
+            emailBody.setAttribute("jobstatuscode",jobStatus);
+            emailBody.setAttribute("errormsg",message);
+
+
+            ConfigurationDao config = new ConfigurationDao();
+            emailBody.setAttribute("sitename",config.getConfiguration("site_id"));
+
+            return emailBody.toString();
+    }
+        
      /**
      * Detects whether the message is HTML or text. 
      * Method will convert HTML to text for Multipart emails
@@ -246,7 +210,7 @@ public class Email {
      * @return The value or null if the key is not in the "configurations" table
      * @throws MessagingException If there was an error retrieving the value
      */  
-    public static Multipart buildMultipartContent(String message) 
+    private static Multipart buildMultipartContent(String message) 
     {
             Multipart multiPart = new MimeMultipart("alternative");
             MimeBodyPart textPart = new MimeBodyPart();
@@ -282,36 +246,11 @@ public class Email {
             return multiPart;    
     }
     
-    /**
-    * Compose the body of the email with templates
-    *
-    * @return The body of email
-    */
-    public String composeBody(Job job, String template, String message, int jobStatus) throws SQLException
-    {   
-            //clean the template
-            template = template.toString().replaceAll("\r","\n");
-
-            StringTemplate emailBody = new StringTemplate(template);
-            
-            emailBody.setAttribute("patientname",FormatText.formatPatientName(job.getExam().getPatientName()));       
-            emailBody.setAttribute("accession",job.getExam().getAccNum());
-            emailBody.setAttribute("jobid",job.getJobId());
-            emailBody.setAttribute("jobstatus",jobStatus);
-            emailBody.setAttribute("errormsg",message);
-
-
-            ConfigurationDao config = new ConfigurationDao();
-            emailBody.setAttribute("sitename",config.getConfiguration("site_id"));
-            
-            return emailBody.toString();
-    }
-    
      /**
      * Construct a session from properties
      * @return The email session
      */  
-    public Session buildSessionFromProperties(Properties javaMailProperties)
+    private static Session buildSessionFromProperties(Properties javaMailProperties)
     {
             Session session = Session.getDefaultInstance(javaMailProperties);  
 
@@ -333,7 +272,7 @@ public class Email {
             return session;
     }
     
-    public static InternetAddress[] validateAddress(String recipients)
+    private static InternetAddress[] validateAddress(String recipients)
     {   
             InternetAddress[] recipient = null;
             try 
@@ -356,7 +295,7 @@ public class Email {
             return recipient;
     }
     
-    public Properties getPropertiesFromDB()
+    private static Properties getProperties()
     {
             EmailConfigurationDao config = new EmailConfigurationDao();
             Properties props = new Properties();
@@ -371,23 +310,5 @@ public class Email {
             }  
 
             return props;   
-    }
-    
-    public Properties getPropertiesFromFile()
-    {
-            File emailPropsFile = new File(Environment.getConfDir(), "email.properties");
-            Properties props = new Properties();
-            
-            try 
-            {
-                //load properties file
-                props.load(new FileInputStream(emailPropsFile));
-            } 
-            catch (IOException ex) 
-            {
-                logger.error("Uncaught exception while loading email.properties file", ex);
-            }
-
-            return props;
     }
 }

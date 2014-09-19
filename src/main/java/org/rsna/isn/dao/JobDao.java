@@ -39,8 +39,8 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.rsna.isn.domain.Exam;
 import org.rsna.isn.domain.Job;
-import org.rsna.isn.util.Email;
-import org.rsna.isn.dao.EmailDao;
+import org.rsna.isn.domain.Email;
+import org.rsna.isn.util.EmailUtil;
 
 /**
  * Programmatic interface to the "v_job_status" view.
@@ -332,63 +332,71 @@ public class JobDao extends Dao
 			con.close();
 		}
                 
+                //check for retryable 
                 //send email for jobs that are C-MOVE failed with 0 retries 
                 //or all other negative statuses
-                if ((status == Job.RSNA_DICOM_C_MOVE_FAILED && job.getRemainingRetries() == 0) || 
-                        (status != Job.RSNA_DICOM_C_MOVE_FAILED))
+                EmailDao emailDao = new EmailDao();
+                String adminEmail = emailDao.getConfiguration("error_email_recipients");  
+                String jobStatusMsg = getStatusMsg(status);
+                
+                //send email to patient when jobset is complete
+                if (isJobSetComplete(job.getJobSetId()))
                 {
-                    
-                        EmailDao dao = new EmailDao();
-                                               
-                        //send email to patient when jobset is complete
-                        if (dao.isEmailPatient() && isJobSetComplete(job.getJobSetId()))
+                        if (emailDao.isEmailPatient() && status == Job.RSNA_COMPLETED_TRANSFER_TO_CLEARINGHOUSE)
                         {
                                 String patientEmail = job.getEmailAddress();
-                                
+
                                 if (patientEmail.isEmpty())
                                 {             
-                                        logger.warn("Patient email job could not created because patient's email is missing for job# " + job.getJobId());
+                                        logger.warn("Patient email job could not be sent because missing email for job# " + job.getJobId());
                                 }         
                                 else 
                                 {
-                                        Email email = new Email();
-
+                                        String body = EmailUtil.composeBody(job,emailDao.getConfiguration("patient_email_body"),message,status,"");
+                                        
                                         //build the body of the email from the template and data from job
-                                        String body = email.composeBody(job,dao.getConfiguration("patient_email_body"),message,status);
-                                        email.setBody(body);
-                                        email.setRecipient(patientEmail);
-                                        email.setSubject(dao.getConfiguration("patient_email_subject"));
-                                        dao.addtoQueue(email);       
+                                        Email email = new Email(patientEmail,emailDao.getConfiguration("patient_email_subject"),body);
+                                        emailDao.addToQueue(email);
                                 }
                         }
-                        
-                        //send mail to administrative user if email error flag set and error code set
-                        if (dao.isSentEmailErrors() && isEmailFlagSet(status))
+                        //queue error email if there are no images to send in the job set
+                        else if (emailDao.isSentEmailErrors() && (status == Job.RSNA_EXAM_CANCELED || status == Job.RSNA_UNABLE_TO_FIND_IMAGES))
                         {
-                                String adminEmail = dao.getConfiguration("error_email_recipients");      
-                                
                                 if (adminEmail.isEmpty())
                                 {             
-                                        logger.warn("Administrative email job could not created because email address does not exist in the database. Job " + job.getJobId());
+                                        logger.warn("Administrative email job could not sent because email address not set. Job# " + job.getJobId());
                                 }     
                                 else 
                                 {
-                                        Email email = new Email();
-                                
+                                        message = "This job set was not submitted because all the exams were either cancelled or had no images.";
+                                        String body = EmailUtil.composeBody(job,emailDao.getConfiguration("error_email_body"),message,status,jobStatusMsg);
+                                        
                                         //build the body of the email from the template and data from job
-                                        String body = email.composeBody(job,dao.getConfiguration("error_email_body"),message,status);
-                                        email.setBody(body);
-
-                                        email.setRecipient(adminEmail);
-                                        email.setSubject(getStatusMsg(status));
-                                        dao.addtoQueue(email);                          
-                                }
-
+                                        Email email = new Email(adminEmail,jobStatusMsg,body);
+                                        emailDao.addToQueue(email);                          
+                                }                                    
                         }
-                } 
-
-	}
-
+                }
+                else 
+                {
+                        //send mail to administrative user if email error flag set and error code set
+                        if (emailDao.isSentEmailErrors() && (status < 0 && job.getRemainingRetries() == 0))
+                        {
+                                if (adminEmail.isEmpty())
+                                {             
+                                        logger.warn("Administrative email job could not sent because email address not set. Job# " + job.getJobId());
+                                }     
+                                else 
+                                {
+                                        String body = EmailUtil.composeBody(job,emailDao.getConfiguration("error_email_body"),message,status,jobStatusMsg);
+                                        
+                                        //build the body of the email from the template and data from job
+                                        Email email = new Email(adminEmail,jobStatusMsg,body);
+                                        emailDao.addToQueue(email);                          
+                                }
+                        }
+                }
+        }
 	/**
 	 * Update the comments associated with the specified job. This method uses
 	 * the value of expectedStatus to locate the appropriate row in the
@@ -489,20 +497,22 @@ public class JobDao extends Dao
 
 		return job;
 	}
-        
+
         public boolean isJobSetComplete(int jobSetId) throws SQLException
         {
                 Connection con = getConnection();
 
 		try
 		{
-                    	String selectSql = "SELECT status from v_job_status WHERE job_set_id = ?";
-
-			PreparedStatement stmt = con.prepareStatement(selectSql);
-			stmt.setInt(1, jobSetId);
+                        String selectSql = "SELECT status from v_job_status WHERE job_set_id = ? AND status NOT IN (?,?) ";
         
+                        PreparedStatement stmt = con.prepareStatement(selectSql); 
+                        stmt.setInt(1, jobSetId);
+                        stmt.setInt(2, Job.RSNA_UNABLE_TO_FIND_IMAGES);
+                        stmt.setInt(3, Job.RSNA_EXAM_CANCELED);
+
                         ResultSet rs = stmt.executeQuery();
-                    
+
 
                         while (rs.next())
                         {
@@ -511,7 +521,7 @@ public class JobDao extends Dao
                                         return false;
                                 }
                         }
-                                
+
                         return true;
 		}
 		finally

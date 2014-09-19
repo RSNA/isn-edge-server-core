@@ -27,9 +27,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import org.rsna.isn.util.Email;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import org.rsna.isn.domain.Email;
 
 /**
  * Programmatic interface to the email_configurations table.
@@ -42,10 +42,10 @@ import org.rsna.isn.util.Email;
 public class EmailDao extends EmailConfigurationDao
 { 
     
-    public void addtoQueue(Email email) throws SQLException
+    public void addToQueue(Email email) throws SQLException
     {
             Connection con = getConnection();
-            try
+            try       
             {
                     String insertSql = "INSERT INTO email_jobs"
                                     + "(recipient, subject, body,created_date) VALUES (?, ?, ?, now())";
@@ -56,22 +56,41 @@ public class EmailDao extends EmailConfigurationDao
                     insertStmt.setString(3, email.getBody());
                     insertStmt.execute();
             }
-
-            catch(SQLException ex)
-            {
-                    con.rollback();
-
-                    throw ex;
-            }
             finally
             {
                     con.close();
             }       
     }
     
-    public void addtoQueue(String recipient,String subject, String body) throws SQLException
-    {     
-            addtoQueue(composeEmail(body,recipient,subject));
+    public Email getFromQueue(int emailQueueId) throws SQLException
+    {
+            Connection con = getConnection();
+            
+            Email email = new Email();
+            
+            try
+            {       
+                    String selectSql = "SELECT * FROM email_jobs WHERE email_job_id = ?";
+                    
+                    PreparedStatement stmt = con.prepareStatement(selectSql);
+
+                    stmt.setInt(1, emailQueueId);
+
+                    ResultSet rs = stmt.executeQuery();
+                    
+                    while (rs.next())
+                    {
+                            email.setBody(rs.getString("body"));
+                            email.setRecipient(rs.getString("recipient"));
+                            email.setSubject(rs.getString("subject"));
+                    }
+            }
+            finally
+            {
+                    con.close();
+            }       
+            
+            return email;
     }
         
     public void updateQueue(int emailQueueId,boolean sent,boolean failed,String comments) throws SQLException
@@ -100,22 +119,16 @@ public class EmailDao extends EmailConfigurationDao
                     con.close();
             }                   
     }
-        
+
     private Email buildEntity(ResultSet rs) throws SQLException
     {
-            Email email = new Email();
-            
-            email.setBody(rs.getString("body"));
-	    email.setSubject(rs.getString("subject"));
-            email.setRecipient(rs.getString("recipient"));
-            
-            return email;
+            return new Email(rs.getString("recipient"),rs.getString("subject"),rs.getString("body"),rs.getInt("email_job_id"));
     }
     
-    public Map<Integer, Email> findEmailsToSend() throws SQLException
+    public Set<Email> findEmailsToSend() throws SQLException
     {    
-            Map<Integer, Email> emails = new LinkedHashMap<Integer, Email>();
-    
+            Set<Email> emailSet = new LinkedHashSet<Email>();
+            
             Connection con = getConnection();
             try
             {
@@ -125,10 +138,10 @@ public class EmailDao extends EmailConfigurationDao
                     while (rs.next())
                     {
                             Email email = buildEntity(rs);
-                            emails.put(rs.getInt("email_job_id"), email);
+                            emailSet.add(email);
                     }
 
-                    return emails;
+                    return emailSet;
             }
             finally
             {
@@ -136,15 +149,6 @@ public class EmailDao extends EmailConfigurationDao
             }     
     }
     
-    public Email composeEmail(String body, String recipent,String subject) throws SQLException
-    {
-            Email email = new Email();
-            email.setBody(body);
-            email.setRecipient(recipent);
-            email.setSubject(subject);
-            return email;
-    }
-        
     public boolean isEmailPatient() throws SQLException
     {
             return Boolean.parseBoolean(getConfiguration("enable_patient_email"));
