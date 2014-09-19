@@ -39,6 +39,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.4</version>
+		</dependency>
+                
+		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.16</version>
@@ -72,7 +78,6 @@
                         <groupId>org.antlr</groupId>
                         <artifactId>ST4</artifactId>
                         <version>4.0.7</version>
-                        <classifier>complete-sources</classifier>
                 </dependency>
                 <dependency>
                         <groupId>org.jasypt</groupId>
