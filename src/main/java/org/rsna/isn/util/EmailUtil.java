@@ -257,7 +257,7 @@ public class EmailUtil {
             //use authenication when mail.smtp.auth is set to true
             if (javaMailProperties.getProperty("mail.smtp.auth") != null && javaMailProperties.getProperty("mail.smtp.auth").equals("true"))
             {
-                    final String pass =  PasswordEncryption.decrypt(javaMailProperties.getProperty("password"));
+                    final String pass =  javaMailProperties.getProperty("password");
                     final String username =  javaMailProperties.getProperty("username");
 
                      session = Session.getInstance(javaMailProperties,

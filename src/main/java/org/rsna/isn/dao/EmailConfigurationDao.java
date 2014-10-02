@@ -32,7 +32,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 import org.rsna.isn.util.Environment;
-import org.rsna.isn.util.PasswordEncryption;
+
 /**
  * 
  * Programmatic interface to the email_configurations table.
@@ -121,28 +121,6 @@ public class EmailConfigurationDao extends Dao
                 {
                         con.close();
                 }
-        }
-        
-        public String getPassword() throws SQLException
-        {
-                Connection con = getConnection();
-                              
-                String selectSql = "SELECT value FROM email_configurations WHERE \"key\" LIKE ?";
-                PreparedStatement stmt = con.prepareStatement(selectSql);
-                stmt.setString(1, "password");
-
-                String password = null;
-                ResultSet rs = stmt.executeQuery();
-
-                while (rs.next())
-                {
-                         password = PasswordEncryption.decrypt(rs.getString("value"));
-                }     
-
-                rs.close();
-                con.close();
-                
-                return password;
         }
         
         public String getUsername() throws SQLException
