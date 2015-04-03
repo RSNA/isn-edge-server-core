@@ -24,14 +24,11 @@
 
 package org.rsna.isn.dao;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
-import org.rsna.isn.util.Environment;
 
 /**
  * 
@@ -96,33 +93,7 @@ public class EmailConfigurationDao extends Dao
                 
                 return props;
         }
-        
-        public boolean isEmailFlagSet(int status) throws SQLException
-        {
-                Connection con = getConnection();
 
-                try
-                {
-                        String selectSql = "SELECT send_alert from status_codes WHERE status_code = ?";
-
-                        PreparedStatement stmt = con.prepareStatement(selectSql);
-                        stmt.setInt(1, status);
-
-                        ResultSet rs = stmt.executeQuery();
-                        
-                        while (rs.next())
-                        {
-                                return rs.getBoolean("send_alert");
-                        }                                                   
-
-                        return false;
-                }
-                finally
-                {
-                        con.close();
-                }
-        }
-        
         public String getUsername() throws SQLException
         {
                 Connection con = getConnection();
@@ -148,38 +119,5 @@ public class EmailConfigurationDao extends Dao
                 {
                         con.close();
                 }           
-        }
-        
-        public static void updateEmailPropFile() throws SQLException
-        {
-            EmailConfigurationDao config = new EmailConfigurationDao();
-            Connection con = config.getConnection();
-            
-            Properties props = new Properties();
-            
-            try
-            {
-                    String selectSql = "SELECT * FROM email_configurations order by key ASC";
-
-                    PreparedStatement stmt = con.prepareStatement(selectSql);
-                    ResultSet rs = stmt.executeQuery();
-                    
-                    while (rs.next())
-                    {
-                        props.setProperty(rs.getString("key"), rs.getString("value"));
-                    }     
-
-                    File confDir = Environment.getConfDir();
-                    File emailPropsFile = new File(confDir, "email.properties");
-
-                    //save properties to conf directory
-                    props.store(new FileOutputStream(emailPropsFile), null);          
-                
-            }
-            catch (Exception ex)
-            {
-                    throw new ExceptionInInitializerError(ex);
-            }
-        }
-                
+        }       
 }

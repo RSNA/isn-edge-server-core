@@ -529,33 +529,7 @@ public class JobDao extends Dao
 			con.close();
 		}
         }
-        
-        public boolean isEmailFlagSet(int status) throws SQLException
-        {
-                Connection con = getConnection();
-
-                try
-                {
-                        String selectSql = "SELECT send_alert from status_codes WHERE status_code = ?";
-
-                        PreparedStatement stmt = con.prepareStatement(selectSql);
-                        stmt.setInt(1, status);
-
-                        ResultSet rs = stmt.executeQuery();
-                        
-                        while (rs.next())
-                        {
-                                return rs.getBoolean("send_alert");
-                        }                                                   
-
-                        return false;
-                }
-                finally
-                {
-                        con.close();
-                }
-        }
-  
+      
         public String getStatusMsg(int status) throws SQLException
         {
                 Connection con = getConnection();
