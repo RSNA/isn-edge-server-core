@@ -68,6 +68,6 @@ public class ConfigurationDao extends Dao
         
         public boolean isAttachDicomReport() throws SQLException
         {
-                return Boolean.parseBoolean(getConfiguration("attach-dicom-report"));
+                return Boolean.parseBoolean(getConfiguration("secondary-capture-report-enabled"));
         }
 }
