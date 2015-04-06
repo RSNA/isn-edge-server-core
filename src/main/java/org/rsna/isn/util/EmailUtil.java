@@ -198,7 +198,7 @@ public class EmailUtil {
 
 
             ConfigurationDao config = new ConfigurationDao();
-            emailBody.setAttribute("sitename",config.getConfiguration("site_id"));
+            emailBody.setAttribute("site_id",config.getConfiguration("site_id"));
 
             return emailBody.toString();
     }
