@@ -29,6 +29,7 @@
 package org.rsna.isn.domain;
 
 import java.util.Date;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * This class represents an exam
@@ -252,7 +253,7 @@ public class Exam
         
         public boolean isReportAvailable()
         {
-                if (this.report == null || this.report.isEmpty())
+                if (StringUtils.isBlank(this.report))
                 {
                         return false;
                 }
