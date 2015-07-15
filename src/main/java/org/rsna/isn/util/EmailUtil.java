@@ -25,6 +25,12 @@ package org.rsna.isn.util;
 
 import java.io.PrintStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -102,16 +108,20 @@ public class EmailUtil {
             Properties props = getProperties();
             String recipients = props.getProperty("error_email_recipients");
             
-            return send(recipients,subject,body);
+            return send(recipients,subject,body,props);
     }
-
-    public static String send(String receivers, String subject, String body) throws AddressException, MessagingException
+        
+    public static String send(String recipients, String subject, String body) throws Exception
+    {          
+            return send(recipients,subject,body,getProperties());
+    }
+        
+    public static String send(String receivers, String subject, String body, Properties props) throws AddressException, MessagingException
     {       
             //Prepare stream for debug output
             ByteArrayOutputStream debugOutput = new ByteArrayOutputStream();
             PrintStream ps = new PrintStream(debugOutput);
             
-            Properties props = getProperties();
             InternetAddress[] recipients = validateAddress(receivers);
             InternetAddress[] replyTo = validateAddress(props.getProperty("reply_to_email")); 
             InternetAddress[] from = validateAddress(props.getProperty("mail.smtp.from"));
@@ -180,7 +190,15 @@ public class EmailUtil {
 
             return debugOutput.toString();
     }
- 
+     
+    public static String sendUsingCachedProps(String subject, String body) throws Exception
+    {          
+            Properties props = getPropertiesFromFile();
+            String recipients = props.getProperty("error_email_recipients");
+            
+            return send(recipients,subject,body,props);
+    }
+    
     // move to email util class. make static and return string
     public static String composeBody(Job job, String template, String message, int jobStatus, String jobStatusMsg) throws SQLException
     {   
@@ -295,20 +313,48 @@ public class EmailUtil {
             return recipient;
     }
     
-    private static Properties getProperties()
+    public static Properties getProperties() throws SQLException
     {
             EmailConfigurationDao config = new EmailConfigurationDao();
-            Properties props = new Properties();
 
+            return config.getEmailConfiguration();   
+    }
+    
+    private static Properties getPropertiesFromFile()
+    {
+            File emailPropsFile = new File(Environment.getConfDir(), "email.properties");
+            Properties props = new Properties();
+        
             try 
             {
-                props = config.getEmailConfiguration();   
+                    //load properties file
+                    props.load(new FileInputStream(emailPropsFile));
             } 
-            catch (SQLException ex) 
+            catch (IOException ex) 
             {
-                logger.error("Uncaught exception while retreiving email properties", ex);
-            }  
+                    logger.error("Uncaught exception while loading email.properties file", ex);
+            }
 
-            return props;   
+            return props;
+    }
+    
+    public static void cacheEmailProp(Properties props)
+    {
+            File emailPropsFile = new File(Environment.getConfDir(), "email.properties");
+        
+            try 
+            {        
+                    OutputStream output = new FileOutputStream(emailPropsFile);
+                    props.store(output, "DO NOT MODIFY - This file is used specifically for sendemail-app.");
+            }
+        
+            catch (FileNotFoundException ex) 
+            {
+                    logger.error("email.properties  not found", ex);
+            }
+            catch (IOException ex) 
+            {
+                    logger.error("Unable to open email.properties", ex);
+            }
     }
 }
