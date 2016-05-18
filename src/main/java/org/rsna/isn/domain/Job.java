@@ -1,4 +1,4 @@
-/* Copyright (c) <2010>, <Radiological Society of North America>
+/* Copyright (c) <2016>, <Radiological Society of North America>
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
  * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
@@ -28,7 +28,7 @@ package org.rsna.isn.domain;
  * This class represents a job.
  *
  * @author Wyatt Tellis
- * @version 3.2.0
+ * @version 4.1.0
  * @since 1.0.0
  */
 public class Job
@@ -226,6 +226,28 @@ public class Job
 		this.singleUsePatientId = singleUsePatientId;
 	}
 
+        private String accessCode;
+        
+        /**
+	 * Get the value of accessCode
+	 *
+	 * @return the value of accessCode
+	 */
+        public String getAccessCode()
+	{
+		return accessCode;
+	}
+
+	/**
+	 * Set the value of accessCode
+	 *
+	 * @param accessCode new value of accessCode
+	 */
+        public void setAccessCode(String accessCode)
+	{
+		this.accessCode = accessCode;
+	}
+        
 	@Override
 	public String toString()
 	{

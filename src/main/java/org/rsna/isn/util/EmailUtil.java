@@ -1,4 +1,4 @@
-/* Copyright (c) <2014>, <Radiological Society of North America>
+/* Copyright (c) <2016>, <Radiological Society of North America>
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
  * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
@@ -61,7 +61,7 @@ import org.rsna.isn.domain.Job;
  * This class implements sending email.
  *
  * @author Clifton Li
- * @version 3.2.0
+ * @version 4.1.0
  * @since 3.2.0
  */
 
@@ -213,7 +213,7 @@ public class EmailUtil {
             emailBody.setAttribute("jobstatus",jobStatusMsg);
             emailBody.setAttribute("jobstatuscode",jobStatus);
             emailBody.setAttribute("errormsg",message);
-
+            emailBody.setAttribute("accesscode",job.getAccessCode());
 
             ConfigurationDao config = new ConfigurationDao();
             emailBody.setAttribute("site_id",config.getConfiguration("site_id"));

@@ -1,4 +1,4 @@
-/* Copyright (c) <2010>, <Radiological Society of North America>
+/* Copyright (c) <2016>, <Radiological Society of North America>
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
  * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
@@ -46,7 +46,7 @@ import org.rsna.isn.util.EmailUtil;
  * Programmatic interface to the "v_job_status" view.
  *
  * @author Wyatt Tellis
- * @version 3.2.0
+ * @version 4.1.0
  * @since 1.0.0
  *
  */
@@ -478,6 +478,7 @@ public class JobDao extends Dao
 		job.setStatusMessage(rs.getString("status_message"));
 		job.setDelay(rs.getInt("delay_in_hrs"));
 		job.setSingleUsePatientId(rs.getString("single_use_patient_id"));
+                job.setAccessCode(rs.getString("access_code"));
 		job.setSendOnComplete(rs.getBoolean("send_on_complete"));
 		job.setRemainingRetries(rs.getInt("remaining_retries"));
                 job.setEmailAddress(rs.getString("email_address"));
