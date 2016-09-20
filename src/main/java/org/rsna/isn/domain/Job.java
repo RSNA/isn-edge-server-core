@@ -302,26 +302,49 @@ public class Job
 		this.remainingRetries = remainingRetries;
 	}
         
-        private String EmailAddress = "";
+        private String emailAddress = "";
         
         /**
-	 * Get the value of EmailAddress
+	 * Get the value of emailAddress
 	 *
-	 * @return the value of EmailAddress
+	 * @return the value of emailAddress
 	 * @since 3.2.0
 	 */
 	public String getEmailAddress()
 	{
-		return EmailAddress;
+		return emailAddress;
 	}
 	/**
 	 * Set the value of EmailAddress
 	 *
-	 * @param EmailAddress new value of EmailAddress
+	 * @param EmailAddress new value of emailAddress
 	 * @since 3.2.0
 	 */
-	public void setEmailAddress(String EmailAddress)
+	public void setEmailAddress(String emailAddress)
 	{
-		this.EmailAddress = EmailAddress;
+		this.emailAddress = emailAddress;
 	}
+        
+        private String phoneNumber = "";
+
+        /**
+         * Get the value of phoneNumber
+         *
+         * @return the value of phoneNumber
+         * @since 4.1.0
+         */
+        public String getPhoneNumber()
+        {
+                return phoneNumber;
+        }
+        /**
+         * Set the value of phoneNumber
+         *
+         * @param phoneNumber new value of phoneNumber
+         * @since 4.1.0
+         */
+        public void setPhoneNumber(String phoneNumber)
+        {
+                this.phoneNumber = phoneNumber;
+        }
 }

@@ -482,7 +482,8 @@ public class JobDao extends Dao
 		job.setSendOnComplete(rs.getBoolean("send_on_complete"));
 		job.setRemainingRetries(rs.getInt("remaining_retries"));
                 job.setEmailAddress(rs.getString("email_address"));
-
+                job.setPhoneNumber(rs.getString("phone_number"));
+                
 		int examId = rs.getInt("exam_id");
 
 		Exam exam = new ExamDao().getExam(examId);
