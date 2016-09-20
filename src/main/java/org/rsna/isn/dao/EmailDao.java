@@ -122,7 +122,13 @@ public class EmailDao extends EmailConfigurationDao
 
     private Email buildEntity(ResultSet rs) throws SQLException
     {
-            return new Email(rs.getString("recipient"),rs.getString("subject"),rs.getString("body"),rs.getInt("email_job_id"));
+            Email email = new Email();
+            email.setBody(rs.getString("body"));
+            email.setRecipient(rs.getString("recipient"));
+            email.setSubject(rs.getString("subject"));
+            email.setEmailId(rs.getInt("email_job_id"));
+
+            return email;
     }
     
     public Set<Email> findEmailsToSend() throws SQLException
