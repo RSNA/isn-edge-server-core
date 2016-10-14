@@ -33,6 +33,8 @@ package org.rsna.isn.domain;
  */
 public class Job
 {
+        public static final int RSNA_NO_DEVICES_FOUND = -1;
+        
 	public static final int RSNA_WAITING_FOR_PREPARE_CONTENT = 1;
 
 	public static final int RSNA_WAITING_FOR_EXAM_FINALIZATION = 21;
