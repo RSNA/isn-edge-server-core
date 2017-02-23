@@ -57,17 +57,17 @@ public class Job
 
 	public static final int RSNA_STARTED_TRANSFER_CONTENT = 31;
 
-	public static final int RSNA_STARTED_KOS_GENERATION = 32;
+	public static final int RSNA_STARTED_PATIENT_REGISTRATION = 32;
 
-	public static final int RSNA_STARTED_PATIENT_REGISTRATION = 33;
+	public static final int RSNA_RETRIEVING_GLOBAL_ID = 33;
 
 	public static final int RSNA_STARTED_DOCUMENT_SUBMISSION = 34;
 
 	public static final int RSNA_FAILED_TO_TRANSFER_TO_CLEARINGHOUSE = -30;
 
-	public static final int RSNA_FAILED_TO_GENERATE_KOS = -32;
+	public static final int RSNA_FAILED_TO_REGISTER_PATIENT = -32;
 
-	public static final int RSNA_FAILED_TO_REGISTER_PATIENT = -33;
+	public static final int RSNA_FAILED_TO_RETRIEVE_GLOBAL_ID = -33;
 
 	public static final int RSNA_FAILED_TO_SUBMIT_DOCUMENTS = -34;
 
@@ -319,7 +319,7 @@ public class Job
 	/**
 	 * Set the value of EmailAddress
 	 *
-	 * @param EmailAddress new value of emailAddress
+	 * @param emailAddress new value of emailAddress
 	 * @since 3.2.0
 	 */
 	public void setEmailAddress(String emailAddress)
