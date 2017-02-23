@@ -558,4 +558,30 @@ public class JobDao extends Dao
                 }         
             
         }
+        
+        public void updateGlobalId(String globalId, Job job) throws SQLException
+        {
+               Connection con = getConnection();
+               
+               try
+               {                     
+                        String updateSql = "UPDATE job_sets SET global_id = ? WHERE job_set_id = ?";
+                        
+                        int jobSetId = job.getJobSetId();
+                        
+                        PreparedStatement updateStmt = con.prepareStatement(updateSql);
+			updateStmt.setString(1, globalId);
+			updateStmt.setInt(2, jobSetId);
+
+			if (updateStmt.executeUpdate() != 1)
+			{
+				throw new IllegalStateException("Unable to update global_id on "
+						+ "row with job_set_id: " + jobSetId);
+			}
+               }
+               finally
+               {
+                        con.close();
+               }
+        }
 }
