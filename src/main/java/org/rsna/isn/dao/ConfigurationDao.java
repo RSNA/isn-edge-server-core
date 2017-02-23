@@ -70,4 +70,27 @@ public class ConfigurationDao extends Dao
         {
                 return Boolean.parseBoolean(getConfiguration("secondary-capture-report-enabled"));
         }
+        
+        public void updateSourceId(String sourceId) throws SQLException
+        {
+                Connection con = getConnection();
+                
+                try
+                {
+                        String updateSql = "UPDATE configurations SET value = ?, modified_date = now() WHERE  key = 'iti41-source-id'";
+
+                        PreparedStatement updateStmt = con.prepareStatement(updateSql);
+
+                        updateStmt.setString(1, sourceId);
+                        
+                        if (updateStmt.executeUpdate() != 1)
+                        {
+                                throw new IllegalStateException("Unable to update iti41-source-id");
+                        }
+                }
+                finally
+                {
+                        con.close();
+                }
+        }               
 }
