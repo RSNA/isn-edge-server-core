@@ -239,6 +239,27 @@ public class Exam
 		this.report = report;
 	}
 
+        private String examDescription;
+	/**
+	 * Get the value of Exam Description
+	 *
+	 * @return the value of ExamDescription
+	 */
+	public String getExamDescription()
+	{
+		return examDescription;
+	}
+        
+	/**
+	 * Set the value of examDescription
+	 *
+	 * @param examDescription new value of examDescription
+	 */
+	public void setExamDescription(String examDescription)
+	{
+		this.examDescription = examDescription;
+	}
+        
 	@Override
 	public String toString()
 	{
