@@ -32,8 +32,14 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-
 import org.rsna.isn.dao.SmsDao;
+
+
+/**
+ *
+ * @author Clifton Li
+ * @version 5.0.0
+ */
 
 public class SmsUtil {
 
