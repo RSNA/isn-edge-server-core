@@ -37,7 +37,17 @@ public class Constants
 	 * network.
 	 */
 	public static final String RSNA_UNIVERSAL_ID = "1.3.6.1.4.1.19376.2.840.1.1.1.1";
-/**
+	/**
+	 * The assigning authority universal id assigned to the RSNA image sharing
+	 * network.
+	 */
+	public static final String RSNA_ISN_UNIVERSAL_ID = "1.3.6.1.4.1.19376.3.840.1.1";    
+	/**
+	 * Identifies the Assigning Authority used for patient identifiers 
+         * sent to the Clearinghouse
+	 */
+	public static final String RSNA_ISN_ASSIGNING_AUTHORITY = "1.3.6.1.4.1.19376.3.840.1.1.1";                    
+        /**
 	 * The assigning authority universal id type assigned to the RSNA image sharing
 	 * network.
 	 */
