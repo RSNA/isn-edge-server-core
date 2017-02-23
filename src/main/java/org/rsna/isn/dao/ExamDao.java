@@ -67,6 +67,7 @@ public class ExamDao extends Dao
 				exam.setStatusTimestamp(rs.getTimestamp("status_timestamp"));
 				exam.setReport(rs.getString("report_text"));
                                 exam.setEmail(rs.getString("email_address"));
+                                exam.setExamDescription(rs.getString("exam_description"));
 
 				String signer = rs.getString("signer");
 				if (StringUtils.isNotBlank(signer))
