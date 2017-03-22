@@ -55,7 +55,7 @@ public class SmsUtil {
             SmsDao smsDao = new SmsDao();
             org.rsna.isn.domain.Sms sms = smsDao.getSms();
 
-            TwilioRestClient client = new TwilioRestClient(sms.getAccountId(), sms.getToken());
+            TwilioProxy client = new TwilioProxy(sms.getAccountId(), sms.getToken());
 
             // Build the parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
