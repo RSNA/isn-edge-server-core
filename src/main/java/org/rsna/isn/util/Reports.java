@@ -65,7 +65,7 @@ public class Reports {
         try
         {
                 ConfigurationDao configDao = new ConfigurationDao();
-                TEMPLATE = configDao.getConfiguration("pdf-template");   
+                TEMPLATE = Environment.getConfDir().getAbsolutePath() + "/pdf-template.pdf";
                 DEST = Environment.getRootDir().getAbsolutePath() + "/report-preview.pdf";            
         }
         catch (Exception ex)
