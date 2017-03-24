@@ -28,8 +28,9 @@ package org.rsna.isn.domain;
  * This class represents a job.
  *
  * @author Wyatt Tellis
- * @version 4.1.0
- * @since 1.0.0
+ * @author Clifton Li
+ * @version 5.0.0
+ * @since 4.1.0
  */
 public class Job
 {
@@ -248,6 +249,28 @@ public class Job
         public void setAccessCode(String accessCode)
 	{
 		this.accessCode = accessCode;
+	}
+
+        private String globalId;
+        
+        /**
+	 * Get the value of globalId
+	 *
+	 * @return the value of globalId
+	 */
+        public String getGlobalId()
+	{
+		return accessCode;
+	}
+        
+ 	/**
+	 * Set the value of globalId
+	 *
+	 * @param globalId new value of globalId
+	 */
+        public void setglobalId(String globalId)
+	{
+		this.globalId = globalId;
 	}
         
 	@Override
