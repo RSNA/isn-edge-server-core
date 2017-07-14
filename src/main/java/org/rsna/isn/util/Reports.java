@@ -88,7 +88,11 @@ public class Reports {
                 Source src = null;
                 if (xsltFile.exists())
                 {
-                      src = new StreamSource(xsltFile);
+                        src = new StreamSource(xsltFile);
+                }
+                else 
+                {   
+                        src = new StreamSource(Reports.class.getResourceAsStream(STYLESHEET)); 
                 }
 
                 Transformer transformer = factory.newTransformer(src);
