@@ -260,7 +260,7 @@ public class Job
 	 */
         public String getGlobalId()
 	{
-		return accessCode;
+		return globalId;
 	}
         
  	/**
@@ -272,7 +272,28 @@ public class Job
 	{
 		this.globalId = globalId;
 	}
+
+        private String globalAA;
         
+        /**
+	 * Get the value of globalAA
+	 *
+	 * @return the value of globalAA
+	 */
+        public String getGlobalAA()
+	{
+		return globalAA;
+	}
+        
+ 	/**
+	 * Set the value of globalAA
+	 *
+	 * @param globalAA new value of globalAA
+	 */
+        public void setglobalAA(String globalAA)
+	{
+		this.globalAA = globalAA;
+	}        
 	@Override
 	public String toString()
 	{

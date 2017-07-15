@@ -559,19 +559,20 @@ public class JobDao extends Dao
             
         }
         
-        public void updateGlobalId(String globalId, Job job) throws SQLException
+        public void updateGlobalId(String globalId, String globalAA, Job job) throws SQLException
         {
                Connection con = getConnection();
                
                try
                {                     
-                        String updateSql = "UPDATE job_sets SET global_id = ? WHERE job_set_id = ?";
+                        String updateSql = "UPDATE job_sets SET global_id = ?, global_aa = ? WHERE job_set_id = ?";
                         
                         int jobSetId = job.getJobSetId();
                         
                         PreparedStatement updateStmt = con.prepareStatement(updateSql);
 			updateStmt.setString(1, globalId);
-			updateStmt.setInt(2, jobSetId);
+                        updateStmt.setString(2, globalAA);
+			updateStmt.setInt(3, jobSetId);
 
 			if (updateStmt.executeUpdate() != 1)
 			{
