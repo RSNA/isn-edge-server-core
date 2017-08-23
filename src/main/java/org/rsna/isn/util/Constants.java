@@ -38,12 +38,21 @@ public class Constants
 	 * Identifies the Assigning Authority used for patient identifiers 
          * sent to the Clearinghouse
 	 */
-	public static final String RSNA_ISN_ASSIGNING_AUTHORITY = "1.3.6.1.4.1.19376.3.840.1.1.1";  
+	//public static final String RSNA_ISN_ASSIGNING_AUTHORITY = "1.3.6.1.4.1.19376.3.840.1.1.1";  
+        public static final String RSNA_ISN_ASSIGNING_AUTHORITY = "1.3.6.1.4.1.21367.13.20.3000"; 
+        
+ 	/**
+	 * Identifies the Assigning Authority used for accession numbers
+         * sent to the Clearinghouse
+	 */       
+        public static final String SITE_ASSIGNING_AUTHORITY = "1.3.6.1.4.1.19376.3.840.1.1.5"; 
 	/**
 	 * Identifies the root for the sourceId in the submission set. 
          * Individual document sources will be assigned a unique value based on this root.
 	 */        
-        public static final String RSNA_ISN_ROOT_SOURCE_ID = "1.3.6.1.4.1.19376.3.840.1.1.4";  
+        //public static final String RSNA_ISN_ROOT_SOURCE_ID = "1.3.6.1.4.1.19376.3.840.1.1.4";  
+        //delete - not used
+        public static final String RSNA_ISN_ROOT_SOURCE_ID = "1.3.6.1.4.1.21367";
         /**
 	 * The assigning authority universal id type assigned to the RSNA image sharing
 	 * network.

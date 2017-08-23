@@ -71,6 +71,30 @@ public class ConfigurationDao extends Dao
                 return Boolean.parseBoolean(getConfiguration("secondary-capture-report-enabled"));
         }
         
+        public void updateConfiguration(String key, String value) throws SQLException
+        {
+                Connection con = getConnection();
+                
+                try
+                {
+                        String updateSql = "UPDATE configurations SET value = ?, modified_date = now() WHERE  key = ?";
+
+                        PreparedStatement updateStmt = con.prepareStatement(updateSql);
+
+                        updateStmt.setString(1, value);
+                        updateStmt.setString(2, key);
+                        
+                        if (updateStmt.executeUpdate() != 1)
+                        {
+                                throw new IllegalStateException("Unable to update " + key);
+                        }
+                }
+                finally
+                {
+                        con.close();
+                }
+        }    
+        
         public void updateSourceId(String sourceId) throws SQLException
         {
                 Connection con = getConnection();
@@ -92,5 +116,5 @@ public class ConfigurationDao extends Dao
                 {
                         con.close();
                 }
-        }               
+        }          
 }
