@@ -93,6 +93,12 @@
                          <groupId>org.apache.xmlgraphics</groupId>
                          <artifactId>fop</artifactId>
                          <version>1.0</version>
+                          <exclusions>
+                                <exclusion>  <!-- declare the exclusion here -->
+                                    <groupId>org.apache.xmlgraphics</groupId>
+                                    <artifactId>batik-js</artifactId>
+                                </exclusion>
+                          </exclusions>       
                 </dependency>
                 <dependency>
                         <groupId>com.twilio.sdk</groupId>
@@ -104,11 +110,23 @@
                           <artifactId>itextpdf</artifactId>
                           <version>5.5.10</version>
                           <type>jar</type>
+                          <exclusions>
+                                <exclusion>  <!-- declare the exclusion here -->
+                                    <groupId>org.apache.xmlgraphics</groupId>
+                                    <artifactId>batik-js</artifactId>
+                                </exclusion>
+                          </exclusions>           
                  </dependency>
                  <dependency>
                           <groupId>com.itextpdf.tool</groupId>
                           <artifactId>xmlworker</artifactId>
                           <version>5.5.10</version>
+                          <exclusions>
+                                <exclusion>  <!-- declare the exclusion here -->
+                                    <groupId>org.apache.xmlgraphics</groupId>
+                                    <artifactId>batik-js</artifactId>
+                                </exclusion>
+                          </exclusions>       
                  </dependency>
                  <dependency>
                           <groupId>com.thedeanda</groupId>
