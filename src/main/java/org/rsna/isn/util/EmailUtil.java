@@ -213,7 +213,7 @@ public class EmailUtil {
             emailBody.setAttribute("jobstatus",jobStatusMsg);
             emailBody.setAttribute("jobstatuscode",jobStatus);
             emailBody.setAttribute("errormsg",message);
-            emailBody.setAttribute("accesscode",job.getAccessCode());
+            emailBody.setAttribute("accesscode",FormatText.formatAccessCode(job.getAccessCode()));
 
             ConfigurationDao config = new ConfigurationDao();
             emailBody.setAttribute("site_id",config.getConfiguration("site_id"));

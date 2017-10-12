@@ -97,4 +97,22 @@ public class FormatText {
     {
             return "<report>" + report + "</report>";    
     }
+     /**
+     * Formats access code by adding a dash after every 3rd character
+     *
+     * @return the formated accessCode
+     */    
+    public static String formatAccessCode(String code)
+    {
+        StringBuilder accessCode = new StringBuilder(code);
+        int offset = 3;
+        
+        for (int idx = offset;idx < accessCode.length(); idx += offset)
+        {
+            accessCode.insert(idx,"-");
+            idx++;
+        }
+        
+        return accessCode.toString();
+    }
 }
