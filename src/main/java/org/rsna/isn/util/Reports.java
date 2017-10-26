@@ -92,7 +92,7 @@ public class Reports {
                 }
                 else 
                 {   
-                        src = new StreamSource(Reports.class.getResourceAsStream(STYLESHEET)); 
+                        src = new StreamSource(Reports.class.getClassLoader().getResourceAsStream(STYLESHEET)); 
                 }
 
                 Transformer transformer = factory.newTransformer(src);
